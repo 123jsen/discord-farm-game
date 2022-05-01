@@ -1,7 +1,7 @@
 {
   "name": "discord-farm-game",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/app.js",
   "repository": "git@github.com:SenYanHo/discord-farm-game.git",
   "author": "SenYanHo <123sendodo@gmail.com>",
   "license": "MIT",
