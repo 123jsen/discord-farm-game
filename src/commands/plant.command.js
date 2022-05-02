@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Player = require('../models/player.model.js');
+const Crop = require('../models/crop.model.js');
 
 // name must be lowercase
 // description cannot be absent
@@ -38,6 +39,8 @@ module.exports = {
 		const player = await Player.findOne({ userId }).populate('farm').exec();
 		const crops = player.farm;
 
+		const newCrop = await Crop.findOne({ name: seed }).exec();
+
 		console.log(`Player ${interaction.user.username} wants to plant ${seed} at Col:${col} Row:${row}`);
 
 		// Calculate index (row major ordering)
@@ -46,10 +49,14 @@ module.exports = {
 		if (crops[index].name !== "Empty")
 			await interaction.reply({ content: 'Farmland is not empty', empheral: true });
 
+		if (!newCrop)
+			await interaction.reply({ content: `Crop named ${newCrop.name} is not found`, empheral: true });
 
+		await Player.updateOne({ userId }, {
+			$set: { [`farm.${index}`]: newCrop.id }
+		});
 
-
-		await interaction.reply('TODO');
+		await interaction.reply(`Planted ${newCrop.name}`);
 	},
 };
 
