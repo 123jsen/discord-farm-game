@@ -30,10 +30,7 @@ module.exports = {
                     harvestGain += crops[index].worth;
 
                     await Player.updateOne({ userId }, {
-                        $set: {
-                            [`farm.${index}`]: emptyCrop.id,
-                            money: player.money + crops[index].worth
-                        }
+                        $set: { [`farm.${index}`]: emptyCrop.id }
                     });
                 }
             }
@@ -43,6 +40,9 @@ module.exports = {
             await interaction.reply({ content: 'Nothing was harvested', ephemeral: true });
         }
         else {
+            await Player.updateOne({ userId }, {
+                $set: { money: player.money + harvestGain }
+            });
             await interaction.reply(`Harvested $${harvestGain}!`);
         }
     },

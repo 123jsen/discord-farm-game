@@ -1,5 +1,3 @@
-// TODO: make line 30 arrays of promises
-
 const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Player = require('../models/player.model.js');
