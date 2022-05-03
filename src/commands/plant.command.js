@@ -8,7 +8,7 @@ const Crop = require('../models/crop.model.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('plant')
-		.setDescription('Plant crop at target location.')
+		.setDescription('Plant crop at target location')
 		.addIntegerOption(option =>
 			option
 				.setName('row')
@@ -43,6 +43,10 @@ module.exports = {
 
 		console.log(`Player ${interaction.user.username} wants to plant ${seed} at Col:${col} Row:${row}`);
 
+		if (player.money < newCrop.price) {
+
+		}
+
 		// Calculate index (row major ordering)
 		const index = row * player.farmWidth + col;
 
@@ -53,7 +57,10 @@ module.exports = {
 			await interaction.reply({ content: `Crop named ${newCrop.name} is not found`, empheral: true });
 
 		await Player.updateOne({ userId }, {
-			$set: { [`farm.${index}`]: newCrop.id }
+			$set: {
+				[`farm.${index}`]: newCrop.id,
+				money: player.money - newCrop.price
+			}
 		});
 
 		await interaction.reply(`Planted ${newCrop.name}`);
