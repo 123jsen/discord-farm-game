@@ -15,12 +15,16 @@ db.on("error", console.error.bind(console, "connection to mongodb error"));
 db.once("open", async () => {
     console.log("Connection to mongoDB server Success");
 
+    await Crop.deleteMany({});
+    console.log("Deleted all crops");
+
     await Crop.create({
         name: "Empty",
         image: "🟫",
         cost: "0",
         worth: "0"
     });
+    console.log("Added empty crop");
 
     await Crop.create({
         name: "Carrot",
@@ -28,8 +32,7 @@ db.once("open", async () => {
         cost: "8",
         worth: "14"
     });
-
-    console.log("Created crops");
+    console.log("Added carrot crop");
 
     return;
 });

@@ -5,7 +5,7 @@ const Player = require('../models/player.model.js');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('farm')
-        .setDescription('Shows current farm plot.'),
+        .setDescription('Shows current farm plot'),
     async execute(interaction) {
         const userId = interaction.user.id;
         const player = await Player.findOne({ userId }).populate('farm').exec();

@@ -32,7 +32,7 @@ module.exports = {
 	async execute(interaction) {
 		// Need offset by 1
 		const row = interaction.options.getInteger('row') - 1;
-		const col = interaction.options.getInteger('row') - 1;
+		const col = interaction.options.getInteger('col') - 1;
 		const seed = interaction.options.getString('seed');
 
 		const userId = interaction.user.id;
@@ -43,27 +43,32 @@ module.exports = {
 
 		console.log(`Player ${interaction.user.username} wants to plant ${seed} at Col:${col} Row:${row}`);
 
-		if (player.money < newCrop.price) {
-
+		if (player.money < newCrop.cost) {
+			await interaction.reply({ content: `You don't have enough money. (You need $${newCrop.cost} and you have $${player.money})`, ephemeral: true });
+			return;
 		}
 
 		// Calculate index (row major ordering)
 		const index = row * player.farmWidth + col;
 
-		if (crops[index].name !== "Empty")
-			await interaction.reply({ content: 'Farmland is not empty', empheral: true });
+		if (crops[index].name !== "Empty") {
+			await interaction.reply({ content: 'Farmland is not empty', ephemeral: true });
+			return;
+		}
 
-		if (!newCrop)
-			await interaction.reply({ content: `Crop named ${newCrop.name} is not found`, empheral: true });
+		if (!newCrop) {
+			await interaction.reply({ content: `Crop named ${newCrop.name} is not found`, ephemeral: true });
+			return;
+		}
 
 		await Player.updateOne({ userId }, {
 			$set: {
 				[`farm.${index}`]: newCrop.id,
-				money: player.money - newCrop.price
+				money: player.money - newCrop.cost
 			}
 		});
 
-		await interaction.reply(`Planted ${newCrop.name}`);
+		await interaction.reply(`Spent $${newCrop.cost} and planted ${newCrop.name}\n`);
 	},
 };
 
