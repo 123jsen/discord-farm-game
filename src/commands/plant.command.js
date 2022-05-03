@@ -64,6 +64,7 @@ module.exports = {
 		await Player.updateOne({ userId }, {
 			$set: {
 				[`farm.${index}`]: newCrop.id,
+				[`timer.${index}`]: new Date,
 				money: player.money - newCrop.cost
 			}
 		});
