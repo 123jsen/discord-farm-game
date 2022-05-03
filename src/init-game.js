@@ -22,7 +22,8 @@ db.once("open", async () => {
         name: "Empty",
         image: "🟫",
         cost: "0",
-        worth: "0"
+        worth: "0",
+        timer: 0
     });
     console.log("Added empty crop");
 
@@ -30,7 +31,8 @@ db.once("open", async () => {
         name: "Carrot",
         image: "🥕",
         cost: "8",
-        worth: "14"
+        worth: "14",
+        timer: 60 * 1000
     });
     console.log("Added carrot crop");
 

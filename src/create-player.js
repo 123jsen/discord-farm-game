@@ -17,13 +17,15 @@ async function createPlayer(interaction) {
     }
 
     const emptyFarm = Array(9).fill(emptyCrop.id);
+    const emptyTime = Array(9).fill(null);
 
     // Need to wait player creation to finish before running other commands like "/farm"
     await Player.create({
         userId,
         money: 100,
         farmWidth: 3,
-        farm: emptyFarm
+        farm: emptyFarm,
+        timer: emptyTime
     });
 
     console.log(`Created new player for ${interaction.user.username}`);
