@@ -1,10 +1,19 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Player = require('../models/player.model.js');
 const Crop = require('../models/crop.model.js');
+const cropList = require('../../data/crops.json');
+
+const cropChoices = [];
+cropList.forEach(crop => {
+	if (crop.name !== 'Empty')
+		cropChoices.push({
+			name: crop.name,
+			value: crop.name
+		});
+})
 
 // name must be lowercase
 // description cannot be absent
-
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('plant')
@@ -24,10 +33,7 @@ module.exports = {
 				.setName('seed')
 				.setDescription('Crop to be planted')
 				.setRequired(true)
-				.addChoices({
-					name: 'Carrot',
-					value: 'Carrot'
-				})),
+				.addChoices(...cropChoices)),
 
 	async execute(interaction) {
 		// Need offset by 1
