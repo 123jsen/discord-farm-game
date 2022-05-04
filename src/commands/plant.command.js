@@ -43,6 +43,11 @@ module.exports = {
 
 		console.log(`Player ${interaction.user.username} wants to plant ${seed} at Col:${col} Row:${row}`);
 
+		if (row >= player.farmWidth || col >= player.farmWidth) {
+			await interaction.reply({ content: 'Coordinates are out of bound', ephemeral: true});
+			return;
+		}
+
 		if (player.money < newCrop.cost) {
 			await interaction.reply({ content: `You don't have enough money. (You need $${newCrop.cost} and you have $${player.money})`, ephemeral: true });
 			return;
