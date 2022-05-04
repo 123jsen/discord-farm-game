@@ -1,6 +1,7 @@
 // Initialize crops list
 
 const Crop = require("./models/crop.model.js");
+const cropList = require("../data/crops.json");
 
 const mongoose = require("mongoose");
 require('dotenv').config();
@@ -18,23 +19,21 @@ db.once("open", async () => {
     await Crop.deleteMany({});
     console.log("Deleted all crops");
 
-    await Crop.create({
-        name: "Empty",
-        image: "🟫",
-        cost: "0",
-        worth: "0",
-        growthTime: 0
-    });
-    console.log("Added empty crop");
+    const promises = [];
 
-    await Crop.create({
-        name: "Carrot",
-        image: "🥕",
-        cost: "8",
-        worth: "14",
-        growthTime: 60 * 1000
-    });
-    console.log("Added carrot crop");
+    cropList.forEach(crop => {
+        promises.push(addCrop(crop));
+    })
 
-    return;
+    Promise
+        .all(promises)
+        .then(() => {
+            console.log('init-game success');
+            process.exit(0);
+        })
 });
+
+async function addCrop(cropObj) {
+    await Crop.create(cropObj);
+    console.log(`Added ${cropObj.name}`);
+}
