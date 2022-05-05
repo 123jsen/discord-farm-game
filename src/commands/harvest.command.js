@@ -1,5 +1,3 @@
-// TODO: make line 30 arrays of promises
-
 const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Player = require('../models/player.model.js');
@@ -19,6 +17,7 @@ module.exports = {
         const current = (new Date).getTime();
         let harvestGain = 0;
 
+        const promises = [];
         for (let i = 0; i < player.farmWidth; i++) {
             for (let j = 0; j < player.farmWidth; j++) {
                 const index = i * player.farmWidth + j;
@@ -27,11 +26,12 @@ module.exports = {
 
                 // Check if field is ready for harvest
                 if (player.timer[index].getTime() + crops[index].growthTime < current) {
+                    console.log(`Ready for harvest`);
                     harvestGain += crops[index].worth;
 
-                    await Player.updateOne({ userId }, {
+                    promises.push(Player.updateOne({ userId }, {
                         $set: { [`farm.${index}`]: emptyCrop.id }
-                    });
+                    }));
                 }
             }
         }
@@ -40,10 +40,14 @@ module.exports = {
             await interaction.reply({ content: 'Nothing was harvested', ephemeral: true });
         }
         else {
-            await Player.updateOne({ userId }, {
-                $set: { money: player.money + harvestGain }
-            });
-            await interaction.reply(`Harvested $${harvestGain}!`);
+            Promise.all(promises)
+                .then(async () => {
+                    await Player.updateOne({ userId }, {
+                        $set: { money: player.money + harvestGain }
+                    });
+
+                    await interaction.reply(`Harvested $${harvestGain}!`);
+                });
         }
     },
 };

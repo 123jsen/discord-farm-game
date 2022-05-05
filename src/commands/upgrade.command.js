@@ -33,37 +33,41 @@ module.exports = {
         const farmUpgrades = upgradeList.find(element => (element.type === 'farmWidth'));
         const nextTier = farmUpgrades.upgrades.find(element => (element.tier === (player.farmWidth + 1)));
 
-        if (player.money >= nextTier.cost) {
+        if (!nextTier) {
+            await interaction.reply({ content: 'There is no next tier', ephemeral: true });
+            return;
+        }
+
+        if (player.money < nextTier.cost) {
+            await interaction.reply({ content: `You need $${nextTier.cost} to upgrade ${upgradeOption} to tier ${nextTier.tier}\n`, ephemeral: true });
+            return;
+        }
+
+        await Player.updateOne({ userId }, {
+            $set: {
+                money: player.money - nextTier.cost
+            }
+        });
+
+        if (upgradeOption === 'farmWidth') {
+            const newFarm = player.farm;
+            const newTimer = player.timer;
+            const emptyCrop = await Crop.findOne({ name: "Empty" }).exec();
+
+            for (let i = player.farmWidth ** 2; i < (player.farmWidth + 1) ** 2; i++) {
+                newFarm.push(emptyCrop.id);
+                newTimer.push(null);
+            }
 
             await Player.updateOne({ userId }, {
                 $set: {
-                    money: player.money - nextTier.cost
+                    farm: newFarm,
+                    timer: newTimer,
+                    farmWidth: player.farmWidth + 1
                 }
             });
-
-            if (upgradeOption === 'farmWidth') {
-                const newFarm = player.farm;
-                const newTimer = player.timer;
-                const emptyCrop = await Crop.findOne({ name: "Empty" }).exec();
-
-                for (let i = player.farmWidth ** 2; i < (player.farmWidth + 1) ** 2; i++) {
-                    newFarm.push(emptyCrop.id);
-                    newTimer.push(null);
-                }
-
-                await Player.updateOne({ userId }, {
-                    $set: {
-                        farm: newFarm,
-                        timer: newTimer,
-                        farmWidth: player.farmWidth + 1
-                    }
-                });
-            }
-            await interaction.reply(`Spent $${nextTier.cost} to upgrade ${upgradeOption} to tier ${nextTier.tier}\n`);
-
-        } else {
-            await interaction.reply({ content: `You need $${nextTier.cost} to upgrade ${upgradeOption} to tier ${nextTier.tier}\n`, ephemeral: true });
         }
-
+        
+        await interaction.reply(`Spent $${nextTier.cost} to upgrade ${upgradeOption} to tier ${nextTier.tier}\n`);
     },
 };
