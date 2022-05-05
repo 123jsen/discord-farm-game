@@ -47,8 +47,6 @@ module.exports = {
 
 		const newCrop = await Crop.findOne({ name: seed }).exec();
 
-		console.log(`Player ${interaction.user.username} wants to plant ${seed} at Col:${col} Row:${row}`);
-
 		if (row >= player.farmWidth || col >= player.farmWidth) {
 			await interaction.reply({ content: 'Coordinates are out of bound', ephemeral: true});
 			return;

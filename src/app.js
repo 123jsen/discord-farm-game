@@ -30,7 +30,7 @@ db.once("open", () => {
 		// Set a new item in the Collection
 		// With the key as the command name and the value as the exported module
 		client.commands.set(command.data.name, command);
-		console.log(`Set command: /${command.data.name}`)
+		console.log(`Loaded command: /${command.data.name}`)
 	}
 
 	// When the client is ready, run this code (only once)
@@ -42,6 +42,8 @@ db.once("open", () => {
 		if (!interaction.isCommand()) return;
 
 		const command = client.commands.get(interaction.commandName);
+
+		console.log(`User ${interaction.user.username} used /${interaction.commandName}`);
 
 		if (!command) return;
 
