@@ -21,9 +21,8 @@ module.exports = {
 
         const farmEmbed = new MessageEmbed()
             .setColor('#a84232')
-            .setTitle(interaction.user.username)
+            .setTitle(`${interaction.user.username}'s farm`)
             .addFields(
-                { name: 'User', value: interaction.user.username },
                 { name: 'Money', value: `${player.money}` },
                 { name: 'Farm', value: farmStr }
             )

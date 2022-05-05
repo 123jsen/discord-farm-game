@@ -26,7 +26,6 @@ module.exports = {
 
                 // Check if field is ready for harvest
                 if (player.timer[index].getTime() + crops[index].growthTime < current) {
-                    console.log(`Ready for harvest`);
                     harvestGain += crops[index].worth;
 
                     promises.push(Player.updateOne({ userId }, {
