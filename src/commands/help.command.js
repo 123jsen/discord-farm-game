@@ -18,7 +18,8 @@ module.exports = {
                 { name: '/check', value: 'Check when a crop is mature' },
                 { name: '/harvest', value: 'Harvest all mature crops and sell them' },
                 { name: '/leaderboard', value: 'Show the top 5 richest player' },
-                { name: '/upgrade', value: 'Upgrade your farm' })
+                { name: '/upgrade', value: 'Upgrade your farm' },
+                { name: '/remove', value: 'Remove a plant and get 50% of its price back' })
 
         await interaction.reply({ embeds: [helpEmbed] });
     },

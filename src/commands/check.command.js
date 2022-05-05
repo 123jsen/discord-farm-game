@@ -46,7 +46,12 @@ module.exports = {
             await interaction.reply({ content: 'Crop is ready for harvest', ephemeral: true });
         }
         else {
-            await interaction.reply({ content: `${crops[index].name} will be mature in ${Math.round(timeRemaining)} seconds`, ephemeral: true });
+            if (timeRemaining > 60) {
+                const mins = Math.floor(timeRemaining / 60);
+                const secs = Math.round(timeRemaining - mins * 60);
+                await interaction.reply({ content: `${crops[index].name} will be mature in ${mins} minutes and ${secs} seconds`, ephemeral: true });
+            } else
+                await interaction.reply({ content: `${crops[index].name} will be mature in ${Math.round(timeRemaining)} seconds`, ephemeral: true });
         }
     },
 };
