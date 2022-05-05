@@ -9,29 +9,43 @@
     {
         "name": "Carrot",
         "image": "🥕",
-        "cost": "8",
-        "worth": "14",
+        "cost": 8,
+        "worth": 14,
         "growthTime": 60000
     },
     {
         "name": "Potato",
         "image": "🥔",
-        "cost": "23",
-        "worth": "40",
+        "cost": 23,
+        "worth": 40,
         "growthTime": 150000
     },
     {
         "name": "Mushroom",
         "image": "🍄",
-        "cost": "44",
-        "worth": "52",
+        "cost": 44,
+        "worth": 52,
         "growthTime": 30000
     },
     {
         "name": "Corn",
         "image": "🌽",
-        "cost": "70",
-        "worth": "115",
+        "cost": 70,
+        "worth": 115,
         "growthTime": 300000
+    },
+    {
+        "name": "Weed",
+        "image": "🌿",
+        "cost": 69,
+        "worth": 150,
+        "growthTime": 600000
+    },
+    {
+        "name": "Apple Tree",
+        "image": "🌳",
+        "cost": 540,
+        "worth": 1280,
+        "growthTime": 900000
     }
 ]
