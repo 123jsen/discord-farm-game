@@ -7,7 +7,7 @@ const commands = [];
 const commandFiles = fs.readdirSync('./src/commands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
+	const command = require(`../commands/${file}`);
 	commands.push(command.data.toJSON());
 	console.log(`Registered command /${command.data.name}`);
 }
