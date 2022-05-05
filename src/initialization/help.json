@@ -1,0 +1,3 @@
+{
+    "content" : "====\nUsage:\ninit-game.js initializes the game and the database by creating crops in the database.\n\nFlags:\n-h: Display this message (Does not initialize game)\n-d: Delete all crops and players\n===="
+}
