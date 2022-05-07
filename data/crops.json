@@ -37,9 +37,9 @@
     {
         "name": "Weed",
         "image": "🌿",
-        "cost": 69,
-        "worth": 150,
-        "growthTime": 600000
+        "cost": 5000,
+        "worth": 15000,
+        "growthTime": 2700000
     },
     {
         "name": "Banana",
