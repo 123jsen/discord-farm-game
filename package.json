@@ -2,6 +2,10 @@
   "name": "discord-farm-game",
   "version": "1.0.0",
   "main": "src/app.js",
+  "scripts": {
+    "update": "node src/initialization/init-game.js && node src/initialization/deploy-commands.js",
+    "commands": "node src/initialization/deploy-commands.js"
+  },
   "repository": "git@github.com:SenYanHo/discord-farm-game.git",
   "author": "SenYanHo <123sendodo@gmail.com>",
   "license": "MIT",

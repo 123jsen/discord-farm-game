@@ -56,7 +56,10 @@ db.once('open', async () => {
 
 async function addCrop(cropObj) {
     try {
-        await Crop.create(cropObj);
+        await Crop.updateOne(
+            {name: cropObj.name}, 
+            cropObj,
+            {upsert: true});
         console.log(`Added ${cropObj.name}`);
     } catch (error) {
         if (error.name === 'MongoServerError' && error.code === 11000)
