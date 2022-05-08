@@ -13,11 +13,7 @@ function exportData(folderPath) {
             data.push(...singleton);
         else
             data.push(singleton)
-
-        console.log(`pushed ${singleton} from ${folderPath}/${file}`);
     }
-
-    console.log(data);
     return data;
 }
 

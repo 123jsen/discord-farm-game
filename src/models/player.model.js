@@ -14,14 +14,35 @@ const PlayerSchema = Schema({
 
     // Plot Detail
     farmWidth: { type: Number, required: true, default: 3 },
-    farm: [{ type: String, default: 'Empty' }],
-    timer: [{ type: Date, default: null }],
+    farmHeight: { type: Number, required: true, default: 3 },
+    farm: [{
+        name: { type: String, default: 'Empty' },
+        timer: { type: Date, default: new Date }
+    }],
 
     // Building Detail
-    building: [{ 
-        name: {type: String, default: 'Empty'},
-        level: {type: String, default: 0}
+    // Building Width is always 2
+    buildingSlots: { type: Number, required: true, default: 4 },
+    building: [{
+        name: { type: String, default: 'Empty' },
+        level: { type: String, default: 0 }
     }]
 });
+
+// Expands farm/building, keeping previous elements
+PlayerSchema.methods.fillEmpty = function fillEmpty() {
+    const emptyFarm = Array(this.farmWidth * this.farmHeight - this.farm.length).fill({ name: 'Empty', timer: new Date });
+    const emptyBuilding = Array(this.buildingSlots - this.building.length).fill({ name: 'Empty', level: 0});
+
+    this.update({
+        farm: [...this.farm, ...emptyFarm],
+        building: [...this.building, ...emptyBuilding]
+    })
+}
+
+// Define constant Building Width
+PlayerSchema.virtual('buildingWidth').get(() => {
+    return 2;
+})
 
 module.exports = mongoose.model("Player", PlayerSchema);
