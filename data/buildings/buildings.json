@@ -1,7 +1,13 @@
 [
     {
+        "name": "Empty",
+        "target": "empty",
+        "image": "🏗️"
+    },
+    {
         "name": "Stone Quarry",
         "target": "stone",
+        "image": "🪨",
         "levels" : [
             {
                 "level": 1,
@@ -20,6 +26,7 @@
     {
         "name": "Lumber Mill",
         "target": "wood",
+        "image": "🪵",
         "levels" : [
             {
                 "level": 1,
@@ -38,6 +45,7 @@
     {
         "name": "Recycling Shop",
         "target": "metal",
+        "image": "🔧",
         "levels" : [
             {
                 "level": 1,
@@ -56,6 +64,7 @@
     {
         "name": "Extra Plots",
         "target": "farmWidth",
+        "image": "🚜",
         "levels" : [
             {
                 "level": 1,

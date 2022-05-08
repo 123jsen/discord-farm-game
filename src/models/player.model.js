@@ -14,11 +14,14 @@ const PlayerSchema = Schema({
 
     // Plot Detail
     farmWidth: { type: Number, required: true, default: 3 },
-    farm: [{ type: String }],
+    farm: [{ type: String, default: 'Empty' }],
     timer: [{ type: Date, default: null }],
 
     // Building Detail
-    building: [{ type: String }]
+    building: [{ 
+        name: {type: String, default: 'Empty'},
+        level: {type: String, default: 0}
+    }]
 });
 
 module.exports = mongoose.model("Player", PlayerSchema);
