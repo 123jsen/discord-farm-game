@@ -1,0 +1,23 @@
+[
+    {
+        "name": "Homegrown",
+        "image": "🪴",
+        "cost": 240,
+        "worth": 480,
+        "growthTime": 900000
+    },
+    {
+        "name": "Weedy Pot",
+        "image": "🍯",
+        "cost": 800,
+        "worth": 1550,
+        "growthTime": 1260000
+    },
+    {
+        "name": "Labmade",
+        "image": "⚗️",
+        "cost": 1350,
+        "worth": 2770,
+        "growthTime": 2100000
+    }
+]

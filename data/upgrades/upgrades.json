@@ -1,21 +1,13 @@
 {
-    "type": "farmWidth",
-    "upgrades": [
+    "name": "farmWidth",
+    "levels": [
         {
-            "tier": 4,
-            "cost": 18000
+            "level": 4,
+            "cost": [18000, 4500, 4500, 4500]
         },
         {
-            "tier": 5,
-            "cost": 225000
-        },
-        {
-            "tier": 6,
-            "cost": 2000000
-        },
-        {
-            "tier": 7,
-            "cost": 5000000
+            "level": 5,
+            "cost": [225000, 31000, 31000, 31000]
         }
     ]
 }

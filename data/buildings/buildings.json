@@ -1,0 +1,74 @@
+[
+    {
+        "name": "Stone Quarry",
+        "target": "stone",
+        "levels" : [
+            {
+                "level": 1,
+                "cost":  [500, 0, 0, 0]
+            },
+            {
+                "level": 2,
+                "cost": [5000, 400, 900, 400]
+            },
+            {
+                "level": 3,
+                "cost": [65000, 8000, 13000, 8000]
+            }
+        ]
+    },
+    {
+        "name": "Lumber Mill",
+        "target": "wood",
+        "levels" : [
+            {
+                "level": 1,
+                "cost":  [500, 0, 0, 0]
+            },
+            {
+                "level": 2,
+                "cost": [5000, 400, 900, 400]
+            },
+            {
+                "level": 3,
+                "cost": [65000, 8000, 13000, 8000]
+            }
+        ]
+    },
+    {
+        "name": "Recycling Shop",
+        "target": "metal",
+        "levels" : [
+            {
+                "level": 1,
+                "cost":  [500, 0, 0, 0]
+            },
+            {
+                "level": 2,
+                "cost": [5000, 400, 900, 400]
+            },
+            {
+                "level": 3,
+                "cost": [65000, 8000, 13000, 8000]
+            }
+        ]
+    },
+    {
+        "name": "Extra Plots",
+        "target": "farmWidth",
+        "levels" : [
+            {
+                "level": 1,
+                "cost":  [250, 0, 0, 0]
+            },
+            {
+                "level": 2,
+                "cost": [6000, 800, 800, 800]
+            },
+            {
+                "level": 3,
+                "cost": [50000, 6000, 6000, 6000]
+            }
+        ]
+    }
+]
