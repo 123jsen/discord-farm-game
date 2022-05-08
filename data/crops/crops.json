@@ -2,8 +2,8 @@
     {
         "name": "Empty",
         "image": "🟫",
-        "cost": "0",
-        "worth": "0",
+        "cost": 0,
+        "worth": 0,
         "growthTime": 0
     },
     {
