@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Player = require('../models/player.model.js');
-const Crop = require("../models/crop.model.js");
+const crops = require('../../data/crops/export.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -22,32 +22,35 @@ module.exports = {
 		const col = interaction.options.getInteger('col') - 1;
 
         const userId = interaction.user.id;
-		const player = await Player.findOne({ userId }).populate('farm').exec();
-		const crops = player.farm;
-        const emptyCrop = await Crop.findOne({ name: "Empty" }).exec();
+		const player = await Player.findOne({ userId }).exec();
+		const farm = player.farm;
 
         const index = row * player.farmWidth + col;
+        const targetCrop = crops.find(crop => crop.name === farm[index].name);
 
         // Check if land is empty
-        if (crops[index].name === 'Empty') {
+        if (farm[index].name === 'Empty') {
             await interaction.reply({ content: 'Farmland is empty', ephemeral: true });
             return;
         }
 
         // Check if crop is mature
         const current = (new Date).getTime();
-        if (player.timer[index].getTime() + crops[index].growthTime < current) {
+        if (farm[index].timer.getTime() + targetCrop.growthTime < current) {
             await interaction.reply({ content: 'Crop is mature, use `/harvest` instead', ephemeral: true });
             return;
         }
 
         await Player.updateOne({ userId }, {
             $set: { 
-                money: player.money + crops[index].cost * 0.5,
-                [`farm.${index}`]: emptyCrop.id
+                money: player.money + targetCrop.cost * 0.5,
+                [`farm.${index}`]: {
+                    name: 'Empty',
+                    timer: new Date
+                }
             }
         });
 
-        await interaction.reply(`${crops[index].name} removed and $${crops[index].cost * 0.5} was refunded`);
+        await interaction.reply(`${targetCrop.name} removed and $${targetCrop.cost * 0.5} was refunded`);
     },
 };

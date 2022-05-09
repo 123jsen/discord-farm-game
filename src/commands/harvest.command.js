@@ -1,4 +1,3 @@
-const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Player = require('../models/player.model.js');
 const crops = require('../../data/crops/export.js');
@@ -11,7 +10,6 @@ module.exports = {
         const userId = interaction.user.id;
         const player = await Player.findOne({ userId }).exec();
         const farm = player.farm;
-        const emptyCrop = crops.find(crop => crop.name === 'Empty');
 
         // Check if each crop is mature
         const current = (new Date).getTime();
