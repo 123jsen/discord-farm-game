@@ -42,7 +42,7 @@ module.exports = {
         }
 
         if (!checkEnoughMoney(nextTier.cost, player)) {
-            await interaction.reply({ content: `You need $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${upgradeOption} to tier ${nextTier.tier}\n`, ephemeral: true });
+            await interaction.reply({ content: `You need $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${category.name} to tier ${nextTier.level}`, ephemeral: true });
             return;
         }
 
@@ -58,7 +58,7 @@ module.exports = {
         if (upgradeOption === 'farmWidth') {
             const farm = player.farm;
 
-            for (let i = player.farmArea; i < player.farmArea + player.farmWidth; i++) {
+            for (let i = player.farmArea; i < (player.farmWidth + 1) * player.farmHeight; i++) {
                 farm.push({
                     name: 'Empty',
                     timer: new Date
@@ -73,6 +73,6 @@ module.exports = {
             });
         }
         
-        await interaction.reply(`Spent $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${category.name} to tier ${nextTier.level}\n`);
+        await interaction.reply(`Spent $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${category.name} to tier ${nextTier.level}`);
     },
 };

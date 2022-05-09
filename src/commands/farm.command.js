@@ -15,7 +15,7 @@ module.exports = {
         let farmStr = "";
         for (let i = 0; i < player.farmHeight; i++) {
             for (let j = 0; j < player.farmWidth; j++) {
-                const index = i * player.farmHeight + j;
+                const index = i * player.farmWidth + j;
                 const { image } = crops.find(crop => crop.name === player.farm[index].name);
                 farmStr = farmStr.concat(image);
             }
