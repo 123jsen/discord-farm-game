@@ -1,13 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Player = require('../models/player.model.js');
-const Crop = require('../models/crop.model.js');
-const cropList = require('../../data/crops.json');
+const cropList = require('../../data/crops/export.js');
 
 const cropChoices = [];
 cropList.forEach(crop => {
 	if (crop.name !== 'Empty')
 		cropChoices.push({
-			name: crop.name,
+			name: `${crop.image} ${crop.name}`,
 			value: crop.name
 		});
 })
@@ -42,10 +41,10 @@ module.exports = {
 		const seed = interaction.options.getString('seed');
 
 		const userId = interaction.user.id;
-		const player = await Player.findOne({ userId }).populate('farm').exec();
+		const player = await Player.findOne({ userId }).exec();
 		const crops = player.farm;
 
-		const newCrop = await Crop.findOne({ name: seed }).exec();
+		const newCrop = cropList.find(crop => crop.name === seed);
 
 		if (row >= player.farmWidth || col >= player.farmWidth) {
 			await interaction.reply({ content: 'Coordinates are out of bound', ephemeral: true});
@@ -72,8 +71,10 @@ module.exports = {
 
 		await Player.updateOne({ userId }, {
 			$set: {
-				[`farm.${index}`]: newCrop.id,
-				[`timer.${index}`]: new Date,
+				[`farm.${index}`]: {
+					name: newCrop.name,
+					timer: new Date
+				},
 				money: player.money - newCrop.cost
 			}
 		});

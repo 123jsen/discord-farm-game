@@ -64,7 +64,7 @@
     {
         "name": "Extra Plots",
         "target": "farmWidth",
-        "image": "🚜",
+        "image": "🟫",
         "levels" : [
             {
                 "level": 1,
