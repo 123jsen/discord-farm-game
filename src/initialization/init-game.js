@@ -16,9 +16,7 @@ if (arguments.includes('-d')) {
 }
 
 // Database
-const Crop = require('../models/crop.model.js');
 const Player = require('../models/player.model.js');
-const cropList = require('../../data/crops.json');
 
 const mongoose = require('mongoose');
 require('dotenv').config();
@@ -34,17 +32,17 @@ db.once('open', async () => {
     console.log('Connection to mongoDB server Success');
 
     if (deleteFlag) {
-        await Crop.deleteMany({});
-        console.log('Deleted all crops');
         await Player.deleteMany({});
-        console.log('Deleted all players');
+        console.log('Deleted all player data');
     }
 
     const promises = [];
-    
-    cropList.forEach(crop => {
-        promises.push(addCrop(crop));
-    })
+
+    if (promises.length === 0)
+    {
+        console.log('Nothing was edited');
+        process.exit(0);
+    }
 
     Promise
         .all(promises)
@@ -53,18 +51,3 @@ db.once('open', async () => {
             process.exit(0);
         })
 });
-
-async function addCrop(cropObj) {
-    try {
-        await Crop.updateOne(
-            {name: cropObj.name}, 
-            cropObj,
-            {upsert: true});
-        console.log(`Added ${cropObj.name}`);
-    } catch (error) {
-        if (error.name === 'MongoServerError' && error.code === 11000)
-            console.log(`Already found in database: ${cropObj.name}`)
-        else
-            console.log(error);
-    }
-}
