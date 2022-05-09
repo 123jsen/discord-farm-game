@@ -11,6 +11,7 @@ const PlayerSchema = Schema({
     money: { type: Number, required: true, default: 0 },
     wood: { type: Number, required: true, default: 0 },
     stone: { type: Number, required: true, default: 0 },
+    metal: { type: Number, required: true, default: 0},
 
     // Plot Detail
     farmWidth: { type: Number, required: true, default: 3 },

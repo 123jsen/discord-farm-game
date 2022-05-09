@@ -1,3 +1,5 @@
+const { DEFAULT_MONEY } = require('../data/config.json');
+
 const Player = require("./models/player.model.js");
 
 async function createPlayer(interaction) {
@@ -9,11 +11,12 @@ async function createPlayer(interaction) {
 
     // Fill Building and Farm Slots
     const emptyFarm = Array(9).fill({ name: 'Empty', timer: new Date });
-    const emptyBuilding = Array(4).fill({ name: 'Empty', level: 0});
+    const emptyBuilding = Array(4).fill({ name: 'Empty', level: 0 });
 
     player = await Player.create({
         userId,
-        money: 100,
+        farmName: `${interaction.user.username}'s Farm`,
+        money: DEFAULT_MONEY,
         building: emptyBuilding,
         farm: emptyFarm
     });

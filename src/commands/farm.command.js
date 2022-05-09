@@ -33,9 +33,10 @@ module.exports = {
 
         const farmEmbed = new MessageEmbed()
             .setColor('#a84232')
-            .setTitle(`${interaction.user.username}'s farm`)
+            .setTitle(player.farmName)
             .addFields(
-                { name: 'Money', value: `${player.money}` },
+                { name: 'Money', value: `$${player.money}` },
+                { name: 'Resouces', value: `🪵 ${player.wood}\n🪨 ${player.stone}\n🔧 ${player.metal}`},
                 { name: 'Farm', value: farmStr },
                 { name: 'Building', value: buildStr }
             )

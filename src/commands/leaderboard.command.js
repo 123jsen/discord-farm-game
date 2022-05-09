@@ -1,6 +1,6 @@
 // TODO: Show player names in leaderboard
 
-const { MessageEmbed, Client } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Player = require('../models/player.model.js');
 
@@ -19,7 +19,7 @@ module.exports = {
 
         let embedField = [];
         for (let i = 0; i < players.length; i++) {
-            embedField.push({ name: `${i + 1}`, value: `$${players[i].money}` });
+            embedField.push({ name: `${i + 1}. ${players[i].farmName}`, value: `$${players[i].money}` });
         }
 
         const boardEmbed = new MessageEmbed()

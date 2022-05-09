@@ -29,6 +29,7 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection to mongodb error'));
 
 db.once('open', async () => {
+    console.log('=====')
     console.log('Connection to mongoDB server Success');
 
     if (deleteFlag) {
@@ -38,9 +39,10 @@ db.once('open', async () => {
 
     const promises = [];
 
-    if (promises.length === 0)
+    if (promises.length === 0 && !deleteFlag)
     {
         console.log('Nothing was edited');
+        console.log('=====')
         process.exit(0);
     }
 
@@ -48,6 +50,7 @@ db.once('open', async () => {
         .all(promises)
         .then(() => {
             console.log('init-game success');
+            console.log('=====')
             process.exit(0);
         })
 });
