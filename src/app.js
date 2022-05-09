@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 require('dotenv').config();
 
 // Imports from project files
-const createPlayer = require('./create-player.js');
+const { createPlayer } = require('./player.js');
 
 const dbUri = process.env.MONGODB_URI;
 mongoose.connect(dbUri);

@@ -1,5 +1,6 @@
 {
-    "name": "farmWidth",
+    "name": "Farm Width",
+    "target": "farmWidth",
     "levels": [
         {
             "level": 4,

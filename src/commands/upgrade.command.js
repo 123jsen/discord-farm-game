@@ -1,13 +1,14 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Player = require('../models/player.model.js');
-const Crop = require("../models/crop.model.js");
+const upgrades = require('../../data/upgrades/export.js');
+const { checkEnoughMoney } = require('../player.js');
 
-const upgradeList = require('../../data/upgrades.json');
+
 const choices = [];
-upgradeList.forEach(upgrade => {
+upgrades.forEach(upgrade => {
     choices.push({
-        name: upgrade.type,
-        value: upgrade.type
+        name: upgrade.name,
+        value: upgrade.target
     });
 })
 
@@ -24,50 +25,54 @@ module.exports = {
                 .addChoices(...choices)),
 
     async execute(interaction) {
-
         const userId = interaction.user.id;
         const player = await Player.findOne({ userId }).exec();
 
+        // Upgrade Option is value of option, i.e. farmWidth
         const upgradeOption = interaction.options.getString('type');
 
-        const farmUpgrades = upgradeList.find(element => (element.type === 'farmWidth'));
-        const nextTier = farmUpgrades.upgrades.find(element => (element.tier === (player.farmWidth + 1)));
+        // Category is object for that target
+        const category = upgrades.find(upgrade => (upgrade.target === upgradeOption));
+
+        const nextTier = category.levels.find(item => (item.level === (player[upgradeOption]  + 1)));
 
         if (!nextTier) {
             await interaction.reply({ content: 'There is no next tier', ephemeral: true });
             return;
         }
 
-        if (player.money < nextTier.cost) {
-            await interaction.reply({ content: `You need $${nextTier.cost} to upgrade ${upgradeOption} to tier ${nextTier.tier}\n`, ephemeral: true });
+        if (!checkEnoughMoney(nextTier.cost, player)) {
+            await interaction.reply({ content: `You need $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${upgradeOption} to tier ${nextTier.tier}\n`, ephemeral: true });
             return;
         }
 
         await Player.updateOne({ userId }, {
             $set: {
-                money: player.money - nextTier.cost
+                money: player.money - nextTier.cost[0],
+                wood: player.wood - nextTier.cost[1],
+                stone: player.wood - nextTier.cost[2],
+                metal: player.wood - nextTier.cost[3]
             }
         });
 
         if (upgradeOption === 'farmWidth') {
-            const newFarm = player.farm;
-            const newTimer = player.timer;
-            const emptyCrop = await Crop.findOne({ name: "Empty" }).exec();
+            const farm = player.farm;
 
-            for (let i = player.farmWidth ** 2; i < (player.farmWidth + 1) ** 2; i++) {
-                newFarm.push(emptyCrop.id);
-                newTimer.push(null);
+            for (let i = player.farmArea; i < player.farmArea + player.farmWidth; i++) {
+                farm.push({
+                    name: 'Empty',
+                    timer: new Date
+                });
             }
 
             await Player.updateOne({ userId }, {
                 $set: {
-                    farm: newFarm,
-                    timer: newTimer,
+                    farm,
                     farmWidth: player.farmWidth + 1
                 }
             });
         }
         
-        await interaction.reply(`Spent $${nextTier.cost} to upgrade ${upgradeOption} to tier ${nextTier.tier}\n`);
+        await interaction.reply(`Spent $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${category.name} to tier ${nextTier.level}\n`);
     },
 };

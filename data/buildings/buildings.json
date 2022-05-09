@@ -63,7 +63,7 @@
     },
     {
         "name": "Extra Plots",
-        "target": "farmWidth",
+        "target": "farmHeight",
         "image": "🟫",
         "levels" : [
             {

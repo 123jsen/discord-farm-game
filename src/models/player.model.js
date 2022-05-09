@@ -30,9 +30,16 @@ const PlayerSchema = Schema({
     }]
 });
 
+// VERY IMPORTANT NOTE: Arrow functions do not support 'this'
+
 // Define constant Building Width
 PlayerSchema.virtual('buildingWidth').get(() => {
     return 2;
-})
+});
+
+// Define Farm Area
+PlayerSchema.virtual('farmArea').get(function() {
+    return this.farmWidth * this.farmHeight;
+});
 
 module.exports = mongoose.model("Player", PlayerSchema);

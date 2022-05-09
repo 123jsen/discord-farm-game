@@ -1,6 +1,17 @@
+// Functions related to player
+
 const { DEFAULT_MONEY } = require('../data/config.json');
 
 const Player = require("./models/player.model.js");
+
+// Cost array is [Money, Wood, Stone, Metal]
+// Player should be object after exec()
+function checkEnoughMoney(costArray, player) {
+    if (player.money < costArray[0] || player.wood < costArray[1] || player.stone < costArray[2] || player.metal < costArray[3])
+        return false;
+    else
+        return true;
+}
 
 async function createPlayer(interaction) {
     const userId = interaction.user.id;
@@ -24,4 +35,4 @@ async function createPlayer(interaction) {
     console.log(`Created new player for ${interaction.user.username}`);
 }
 
-module.exports = createPlayer;
+module.exports = { checkEnoughMoney, createPlayer };
