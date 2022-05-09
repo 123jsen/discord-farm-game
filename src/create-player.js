@@ -7,12 +7,16 @@ async function createPlayer(interaction) {
     // No creation needed if player is already in DB
     if (player) return;
 
+    // Fill Building and Farm Slots
+    const emptyFarm = Array(9).fill({ name: 'Empty', timer: new Date });
+    const emptyBuilding = Array(4).fill({ name: 'Empty', level: 0});
+
     player = await Player.create({
         userId,
         money: 100,
+        building: emptyBuilding,
+        farm: emptyFarm
     });
-
-    await player.fillEmpty();
 
     console.log(`Created new player for ${interaction.user.username}`);
 }

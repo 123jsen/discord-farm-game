@@ -29,17 +29,6 @@ const PlayerSchema = Schema({
     }]
 });
 
-// Expands farm/building, keeping previous elements
-PlayerSchema.methods.fillEmpty = function fillEmpty() {
-    const emptyFarm = Array(this.farmWidth * this.farmHeight - this.farm.length).fill({ name: 'Empty', timer: new Date });
-    const emptyBuilding = Array(this.buildingSlots - this.building.length).fill({ name: 'Empty', level: 0});
-
-    this.update({
-        farm: [...this.farm, ...emptyFarm],
-        building: [...this.building, ...emptyBuilding]
-    })
-}
-
 // Define constant Building Width
 PlayerSchema.virtual('buildingWidth').get(() => {
     return 2;
