@@ -1,13 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Player = require('../models/player.model.js');
-const Crop = require('../models/crop.model.js');
-const cropList = require('../../data/crops.json');
+const cropList = require('../../data/crops/export.js');
 
 const cropChoices = [];
 cropList.forEach(crop => {
     if (crop.name !== 'Empty')
         cropChoices.push({
-            name: crop.name,
+            name: `${crop.image} ${crop.name}`,
             value: crop.name
         });
 })
@@ -27,11 +26,13 @@ module.exports = {
 
     async execute(interaction) {
         const seed = interaction.options.getString('seed');
-        const userId = interaction.user.id;
-        const player = await Player.findOne({ userId }).populate('farm').exec();
 
+        const userId = interaction.user.id;
+
+        const player = await Player.findOne({ userId }).exec();
         const crops = player.farm;
-        const newCrop = await Crop.findOne({ name: seed }).exec();
+
+        const newCrop = cropList.find(crop => crop.name === seed);
 
         if (!newCrop) {
             await interaction.reply({ content: `Crop named ${newCrop.name} is not found`, ephemeral: true });
@@ -45,9 +46,9 @@ module.exports = {
 
         const promises = [];
 
-        for (index = 0; index < player.farmWidth ** 2; index++) {
+        for (index = 0; index < player.farmWidth * player.farmHeight; index++) {
             if (crops[index].name !== "Empty") {
-                occupiedField ++;
+                occupiedField++;
                 continue;
             }
 
@@ -56,19 +57,21 @@ module.exports = {
                 promises.push(
                     Player.updateOne({ userId }, {
                         $set: {
-                            [`farm.${index}`]: newCrop.id,
-                            [`timer.${index}`]: new Date,
+                            [`farm.${index}`]: {
+                                name: newCrop.name,
+                                timer: new Date
+                            }
                         }
                     })
                 )
-
-                cropPlanted ++;
+                
+                cropPlanted++;
                 totalCost += newCrop.cost;
             }
         }
 
         if (promises.length === 0) {
-            if (occupiedField === player.farmWidth ** 2)
+            if (occupiedField === player.farmWidth * player.farmHeight)
                 await interaction.reply({ content: 'No crops are planted. The farm is full', ephemeral: true });
             else
                 await interaction.reply({ content: `No crops are planted. You have $${player.money}`, ephemeral: true });

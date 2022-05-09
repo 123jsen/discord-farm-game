@@ -1,7 +1,7 @@
-const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Player = require('../models/player.model.js');
-const Crop = require("../models/crop.model.js");
+const cropList = require('../../data/crops/export.js');
+
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -23,24 +23,25 @@ module.exports = {
         const col = interaction.options.getInteger('col') - 1;
 
         const userId = interaction.user.id;
-        const player = await Player.findOne({ userId }).populate('farm').exec();
-        const crops = player.farm;
+        const player = await Player.findOne({ userId }).exec();
+        const farm = player.farm;
 
-        if (row >= player.farmWidth || col >= player.farmWidth) {
+        if (row >= player.farmHeight || col >= player.farmWidth) {
             await interaction.reply({ content: 'Coordinates are out of bound', ephemeral: true });
             return;
         }
 
         const index = row * player.farmWidth + col;
+        const crop = cropList.find(crop => crop.name === farm[index].name);
 
         // Check if field is empty
-        if (crops[index].name === 'Empty' || player.timer[index] === null) {
+        if (farm[index].name === 'Empty') {
             await interaction.reply({ content: 'No crop is planted at that spot', ephemeral: true });
             return;
         }
 
         // Calculate time remaining
-        const timeRemaining = ((player.timer[index].getTime() + crops[index].growthTime) - Date.now()) / 1000;
+        const timeRemaining = ((farm[index].timer.getTime() + crop.growthTime) - Date.now()) / 1000;
 
         if (timeRemaining < 0) {
             await interaction.reply({ content: 'Crop is ready for harvest', ephemeral: true });
@@ -49,9 +50,9 @@ module.exports = {
             if (timeRemaining > 60) {
                 const mins = Math.floor(timeRemaining / 60);
                 const secs = Math.round(timeRemaining - mins * 60);
-                await interaction.reply({ content: `${crops[index].name} will be mature in ${mins} minutes and ${secs} seconds`, ephemeral: true });
+                await interaction.reply({ content: `${farm[index].name} will be mature in ${mins} minutes and ${secs} seconds`, ephemeral: true });
             } else
-                await interaction.reply({ content: `${crops[index].name} will be mature in ${Math.round(timeRemaining)} seconds`, ephemeral: true });
+                await interaction.reply({ content: `${farm[index].name} will be mature in ${Math.round(timeRemaining)} seconds`, ephemeral: true });
         }
     },
 };

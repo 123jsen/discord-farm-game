@@ -46,7 +46,7 @@ module.exports = {
 
 		const newCrop = cropList.find(crop => crop.name === seed);
 
-		if (row >= player.farmWidth || col >= player.farmWidth) {
+		if (row >= player.farmHeight || col >= player.farmWidth) {
 			await interaction.reply({ content: 'Coordinates are out of bound', ephemeral: true});
 			return;
 		}
