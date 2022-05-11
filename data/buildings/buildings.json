@@ -5,9 +5,9 @@
         "image": "🏗️"
     },
     {
-        "name": "Stone Quarry",
-        "target": "stone",
-        "image": "🪨",
+        "name": "Lumber Mill",
+        "target": "wood",
+        "image": "🪵",
         "levels" : [
             {
                 "level": 1,
@@ -17,19 +17,19 @@
             {
                 "level": 2,
                 "effect": 650,
-                "cost": [5000, 400, 900, 400]
+                "cost": [5000, 900, 400, 400]
             },
             {
                 "level": 3,
                 "effect": 3500,
-                "cost": [65000, 8000, 13000, 8000]
+                "cost": [65000, 13000, 8000, 8000]
             }
         ]
     },
     {
-        "name": "Lumber Mill",
-        "target": "wood",
-        "image": "🪵",
+        "name": "Stone Quarry",
+        "target": "stone",
+        "image": "🪨",
         "levels" : [
             {
                 "level": 1,
@@ -61,12 +61,12 @@
             {
                 "level": 2,
                 "effect": 650,
-                "cost": [5000, 400, 900, 400]
+                "cost": [5000, 400, 400, 900]
             },
             {
                 "level": 3,
                 "effect": 3500,
-                "cost": [65000, 8000, 13000, 8000]
+                "cost": [65000, 8000, 8000, 13000]
             }
         ]
     },
