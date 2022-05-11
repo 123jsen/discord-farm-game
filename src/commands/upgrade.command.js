@@ -34,7 +34,7 @@ module.exports = {
         // Category is object for that target
         const category = upgrades.find(upgrade => (upgrade.target === upgradeOption));
 
-        const nextTier = category.levels.find(item => (item.level === (player[upgradeOption]  + 1)));
+        const nextTier = category.levels.find(item => (item.level === (player[upgradeOption] + 1)));
 
         if (!nextTier) {
             await interaction.reply({ content: 'There is no next tier', ephemeral: true });
@@ -72,7 +72,25 @@ module.exports = {
                 }
             });
         }
-        
+
+        if (upgradeOption === 'buildingSlots') {
+            const building = player.building;
+
+            building.push({
+                name: 'Empty',
+                level: 0
+            });
+
+            await Player.updateOne({ userId }, {
+                $inc: {
+                    buildingSlots: 1
+                },
+                $set: {
+                    building,
+                }
+            });
+        }
+
         await interaction.reply(`Spent $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${category.name} to tier ${nextTier.level}`);
     },
 };
