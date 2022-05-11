@@ -15,10 +15,6 @@ const PlayerSchema = Schema({
     stone: { type: Number, required: true, default: 0 },
     metal: { type: Number, required: true, default: 0},
 
-    // Temp Variables
-    tempWood: { type: Number, default: 0 },
-    tempStone: { type: Number, default: 0 },
-    tempMetal: { type: Number, default: 0 },
     lastHarvested: { type: Date, default: new Date},
 
     // Productivity
@@ -101,5 +97,23 @@ PlayerSchema.static('updateOneProduction', async function(document) {
 
     await document.save();
 });
+
+// Update lastHarvested
+PlayerSchema.static('calculateProduction', async function(userId) {
+    // Find player
+    let player = await this.findOne({ userId }).exec();
+
+    // Time in milliseconds
+    const timePassed = Date.now() - player.lastHarvested.getTime();
+    const hourPassed = timePassed / (1000 * 60 * 60);
+
+    player.wood += hourPassed * player.woodCapacity;
+    player.stone += hourPassed * player.stoneCapacity;
+    player.metal += hourPassed * player.metalCapacity;
+
+    player.lastHarvested = new Date;
+
+    await player.save();
+})
 
 module.exports = mongoose.model("Player", PlayerSchema);

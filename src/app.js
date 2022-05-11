@@ -6,6 +6,7 @@ require('dotenv').config();
 
 // Imports from project files
 const { createPlayer } = require('./player.js');
+const Player = require('./models/player.model.js');
 
 const dbUri = process.env.MONGODB_URI;
 mongoose.connect(dbUri);
@@ -43,12 +44,15 @@ db.once("open", () => {
 
 		const command = client.commands.get(interaction.commandName);
 
-		console.log(`User ${interaction.user.username} used /${interaction.commandName}`);
+		console.log(`User ${interaction.user.username} Id: ${interaction.user.id} used /${interaction.commandName}`);
 
 		if (!command) return;
 
+		// Middleware
 		await createPlayer(interaction);
+		await Player.calculateProduction(interaction.user.id);
 
+		// Executing commands
 		try {
 			await command.execute(interaction);
 		} catch (error) {
