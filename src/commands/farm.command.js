@@ -12,7 +12,12 @@ module.exports = {
         const userId = interaction.user.id;
         const player = await Player.findOne({ userId }).exec();
 
-        let farmStr = "";
+        let resourceStr = '';
+        resourceStr = resourceStr.concat(`🪵 ${player.wood} (+ ${player.woodCapacity}/hr)\n`);
+        resourceStr = resourceStr.concat(`🪨 ${player.stone} (+ ${player.stoneCapacity}/hr)\n`);
+        resourceStr = resourceStr.concat(`🔧 ${player.metal} (+ ${player.metalCapacity}/hr)\n`);
+
+        let farmStr = '';
         for (let i = 0; i < player.farmHeight; i++) {
             for (let j = 0; j < player.farmWidth; j++) {
                 const index = i * player.farmWidth + j;
@@ -22,7 +27,7 @@ module.exports = {
             farmStr = farmStr.concat("\n");
         }
 
-        let buildStr = "";
+        let buildStr = '';
         for (let i = 0; i < player.buildingSlots; i++) {
             if ((i !== 0) && ((i % player.buildingWidth) === 0))
                 buildStr = buildStr.concat("\n");
@@ -36,7 +41,7 @@ module.exports = {
             .setTitle(player.farmName)
             .addFields(
                 { name: 'Money', value: `$${player.money}` },
-                { name: 'Resouces', value: `🪵 ${player.wood}\n🪨 ${player.stone}\n🔧 ${player.metal}`},
+                { name: 'Resouces', value: resourceStr},
                 { name: 'Farm', value: farmStr },
                 { name: 'Building', value: buildStr }
             )

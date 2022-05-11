@@ -59,30 +59,16 @@ module.exports = {
                 return;
             }
 
-            // Update Player Currencies
-            await Player.updateOne({ userId }, {
-                $set: {
-                    [`building.${index}`] : {
-                        name: category.name,
-                        level: 1
-                    },
-                    money: player.money - buildLevel.cost[0],
-                    wood: player.wood - buildLevel.cost[1],
-                    stone: player.wood - buildLevel.cost[2],
-                    metal: player.wood - buildLevel.cost[3]
-                }
-            });
-
             if (buildOption === 'farmHeight') {
                 const farm = player.farm;
-    
-                for (let i = player.farmArea; i < player.farmArea + player.farmHeight; i++) {
+
+                for (let i = player.farmArea; i < player.farmWidth * (player.farmHeight + 1); i++) {
                     farm.push({
                         name: 'Empty',
                         timer: new Date
                     });
                 }
-    
+
                 await Player.updateOne({ userId }, {
                     $set: {
                         farm,
@@ -90,6 +76,20 @@ module.exports = {
                     }
                 });
             }
+
+            player.building[index] = {
+                name: category.name,
+                level: 1
+            };
+            player.money -= buildLevel.cost[0],
+            player.wood -= buildLevel.cost[1],
+            player.stone -= buildLevel.cost[2],
+            player.metal -= buildLevel.cost[3]
+
+            // Update Player Production Capacities
+            await Player.updateOneProduction(player);
+
+            await player.save();
 
             await interaction.reply(`Spent $${buildLevel.cost[0]}, ${buildLevel.cost[1]} wood, ${buildLevel.cost[2]} stone and ${buildLevel.cost[3]} metal to build ${category.name}`);
         }

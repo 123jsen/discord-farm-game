@@ -49,7 +49,7 @@ module.exports = {
             Promise.all(promises)
                 .then(async () => {
                     await Player.updateOne({ userId }, {
-                        $set: { money: player.money + harvestGain }
+                        $inc: { money: harvestGain }
                     });
 
                     await interaction.reply(`Harvested $${harvestGain}!`);

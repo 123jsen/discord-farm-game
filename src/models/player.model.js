@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const buildings = require('../../data/buildings/export.js');
+
 const Schema = mongoose.Schema;
 
 const PlayerSchema = Schema({
@@ -12,6 +14,17 @@ const PlayerSchema = Schema({
     wood: { type: Number, required: true, default: 0 },
     stone: { type: Number, required: true, default: 0 },
     metal: { type: Number, required: true, default: 0},
+
+    // Temp Variables
+    tempWood: { type: Number, default: 0 },
+    tempStone: { type: Number, default: 0 },
+    tempMetal: { type: Number, default: 0 },
+    lastHarvested: { type: Date, default: new Date},
+
+    // Productivity
+    woodCapacity: { type: Number, default: 0},
+    stoneCapacity: { type: Number, default: 0},
+    metalCapacity: { type: Number, default: 0},
 
     // Plot Detail
     farmWidth: { type: Number, required: true, default: 3 },
@@ -40,6 +53,53 @@ PlayerSchema.virtual('buildingWidth').get(() => {
 // Define Farm Area
 PlayerSchema.virtual('farmArea').get(function() {
     return this.farmWidth * this.farmHeight;
+});
+
+// This static method checks buildings and update 
+PlayerSchema.static('updateOneProduction', async function(document) {
+    document.woodCapacity = 0;
+    document.stoneCapacity = 0;
+    document.metalCapacity = 0;
+
+    const woodFarm = buildings.find(build => build.target === 'wood');
+    const stoneFarm = buildings.find(build => build.target === 'stone');
+    const metalFarm = buildings.find(build => build.target === 'metal');
+
+    let woodCount = 0;
+    let stoneCount = 0;
+    let metalCount = 0;
+
+    for (let i = 0; i < document.buildingSlots; i++)
+    {
+        const level = document.building[i].level;
+
+        if (document.building[i].name === 'Lumber Mill') {
+            woodCount ++;
+            document.woodCapacity += woodFarm.levels[level - 1].effect;
+        }
+        else if (document.building[i].name === 'Stone Quarry') {
+            stoneCount ++;
+            document.stoneCapacity += stoneFarm.levels[level - 1].effect;
+        }
+        else if (document.building[i].name === 'Recycling Shop') {
+            metalCount ++;
+            document.metalCapacity += metalFarm.levels[level - 1].effect;
+        }
+    }
+
+    if (woodCount == 1) document.woodCapacity *= 1.0;
+    if (woodCount == 2) document.woodCapacity *= 1.4;
+    if (woodCount >= 3) document.woodCapacity *= 2.0;
+
+    if (stoneCount == 1) document.stoneCapacity *= 1.0;
+    if (stoneCount == 2) document.stoneCapacity *= 1.4;
+    if (stoneCount >= 3) document.stoneCapacity *= 2.0;
+
+    if (metalCount == 1) document.metalCapacity *= 1.0;
+    if (metalCount == 2) document.metalCapacity *= 1.4;
+    if (metalCount >= 3) document.metalCapacity *= 2.0;
+
+    await document.save();
 });
 
 module.exports = mongoose.model("Player", PlayerSchema);
