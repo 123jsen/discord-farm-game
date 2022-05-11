@@ -13,9 +13,9 @@ module.exports = {
         const player = await Player.findOne({ userId }).exec();
 
         let resourceStr = '';
-        resourceStr = resourceStr.concat(`🪵 ${Math.round(player.wood)} (+ ${player.woodCapacity}/hr)\n`);
-        resourceStr = resourceStr.concat(`🪨 ${Math.round(player.stone)} (+ ${player.stoneCapacity}/hr)\n`);
-        resourceStr = resourceStr.concat(`🔧 ${Math.round(player.metal)} (+ ${player.metalCapacity}/hr)\n`);
+        resourceStr = resourceStr.concat(`🪵 ${Math.round(player.wood)} (+ ${Math.round(player.woodCapacity)}/hr)\n`);
+        resourceStr = resourceStr.concat(`🪨 ${Math.round(player.stone)} (+ ${Math.round(player.stoneCapacity)}/hr)\n`);
+        resourceStr = resourceStr.concat(`🔧 ${Math.round(player.metal)} (+ ${Math.round(player.metalCapacity)}/hr)\n`);
 
         let farmStr = '';
         for (let i = 0; i < player.farmHeight; i++) {

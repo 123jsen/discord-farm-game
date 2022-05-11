@@ -6,7 +6,7 @@ const cropChoices = [];
 cropList.forEach(crop => {
     if (crop.name !== 'Empty')
         cropChoices.push({
-            name: `${crop.image} ${crop.name}`,
+            name: `${crop.image} ${crop.name} Cost:$${crop.cost}`,
             value: crop.name
         });
 })

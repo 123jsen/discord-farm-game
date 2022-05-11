@@ -43,7 +43,7 @@ module.exports = {
 
     async execute(interaction) {
         const userId = interaction.user.id;
-        const targetId = interaction.options.getUser('target').user.id;
+        const targetId = interaction.options.getUser('target').id;
 
         if (userId === targetId) {
             await interaction.reply({ content: 'You cannot give resources to yourself', ephemeral: true });
