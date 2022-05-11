@@ -1,3 +1,4 @@
 {
-    "DEFAULT_MONEY" : 69
+    "DEFAULT_MONEY" : 69,
+    "GOLD_PER_RESOURCES": 60
 }

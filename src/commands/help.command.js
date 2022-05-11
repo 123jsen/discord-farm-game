@@ -19,6 +19,7 @@ module.exports = {
                 { name: '/plantall', value: 'Plant as many as possible crops' },
                 { name: '/check', value: 'Check when a crop is mature' },
                 { name: '/harvest', value: 'Harvest all mature crops and sell them' },
+                { name: '/buy', value: 'Buy building resources with money' },
                 { name: '/leaderboard', value: 'Show the top 5 richest player' },
                 { name: '/upgrade', value: 'Upgrade your farm' },
                 { name: '/build', value: 'Build a building at a spot' },
