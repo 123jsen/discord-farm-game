@@ -41,12 +41,12 @@ module.exports = {
         const row = interaction.options.getInteger('row') - 1;
         const col = interaction.options.getInteger('col') - 1;
 
-        if (col >= player.buildingWidth) {
+        const index = row * player.buildingWidth + col;
+
+        if (col >= player.buildingWidth || index >= player.buildingSlots) {
             await interaction.reply({ content: 'Coordinates are out of bound', ephemeral: true });
             return;
         }
-
-        const index = row * player.buildingWidth + col;
 
         const buildOption = interaction.options.getString('type');
         const category = buildings.find(build => (build.target === buildOption));
@@ -82,9 +82,9 @@ module.exports = {
                 level: 1
             };
             player.money -= buildLevel.cost[0],
-            player.wood -= buildLevel.cost[1],
-            player.stone -= buildLevel.cost[2],
-            player.metal -= buildLevel.cost[3]
+                player.wood -= buildLevel.cost[1],
+                player.stone -= buildLevel.cost[2],
+                player.metal -= buildLevel.cost[3]
 
             // Update Player Production Capacities
             await Player.updateOneProduction(player);
@@ -95,7 +95,15 @@ module.exports = {
         }
         // Check for match and upgrade existing building
         else {
+            if (player.building[index].name != category.name) {
+                await interaction.reply({ content: `You cannot build ${category.name} as ${player.building[index].name} is already here`, ephemeral: true });
+                return;
+            }
 
+            // Update Player Production Capacities
+            await Player.updateOneProduction(player);
+
+            await player.save();
         }
     },
 };
