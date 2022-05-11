@@ -51,8 +51,10 @@ module.exports = {
         const buildOption = interaction.options.getString('type');
         const category = buildings.find(build => (build.target === buildOption));
 
+        const currentBuilding = player.building[index];
+
         // Build new building if land is empty
-        if (player.building[index].name === 'Empty') {
+        if (currentBuilding.name === 'Empty') {
             const buildLevel = category.levels[0];
             if (!checkEnoughMoney(buildLevel.cost, player)) {
                 await interaction.reply({ content: `You need $${buildLevel.cost[0]}, ${buildLevel.cost[1]} wood, ${buildLevel.cost[2]} stone and ${buildLevel.cost[3]} metal to build ${category.name}`, ephemeral: true });
@@ -95,15 +97,43 @@ module.exports = {
         }
         // Check for match and upgrade existing building
         else {
-            if (player.building[index].name != category.name) {
-                await interaction.reply({ content: `You cannot build ${category.name} as ${player.building[index].name} is already here`, ephemeral: true });
+
+            if (currentBuilding.name != category.name) {
+                await interaction.reply({ content: `You cannot build ${category.name} as ${currentBuilding.name} is already here`, ephemeral: true });
                 return;
             }
+
+            // If current level is 1, then nextTier is levels[1]
+            const nextTier = category.levels[currentBuilding.level];
+
+            // No next tier
+            if (!nextTier) {
+                await interaction.reply({ content: `You cannot upgrade ${category.name}`, ephemeral: true });
+                return;
+            }
+
+            if (!checkEnoughMoney(nextTier.cost, player)) {
+                await interaction.reply({ content: `You need $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${category.name}`, ephemeral: true });
+                return;
+            }
+
+            // Actually upgrading
+            player.building[index] = {
+                name: category.name,
+                level: currentBuilding.level + 1
+            };
+
+            player.money -= nextTier.cost[0];
+            player.wood -= nextTier.cost[1];
+            player.stone -= nextTier.cost[2];
+            player.metal -= nextTier.cost[3];
 
             // Update Player Production Capacities
             await Player.updateOneProduction(player);
 
             await player.save();
+
+            await interaction.reply(`You spent $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${category.name} to level ${currentBuilding.level + 1}`);
         }
     },
 };

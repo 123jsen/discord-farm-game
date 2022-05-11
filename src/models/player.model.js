@@ -35,7 +35,7 @@ const PlayerSchema = Schema({
     buildingSlots: { type: Number, required: true, default: 4 },
     building: [{
         name: { type: String, default: 'Empty' },
-        level: { type: String, default: 0 }
+        level: { type: Number, default: 0 }
     }]
 });
 
