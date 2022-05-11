@@ -1,7 +1,6 @@
-const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Player = require('../models/player.model.js');
-const Crop = require("../models/crop.model.js");
+const crops = require('../../data/crops/export.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -9,27 +8,35 @@ module.exports = {
         .setDescription('Harvest all mature crops'),
     async execute(interaction) {
         const userId = interaction.user.id;
-        const player = await Player.findOne({ userId }).populate('farm').exec();
-        const crops = player.farm;
-        const emptyCrop = await Crop.findOne({ name: "Empty" }).exec();
+        const player = await Player.findOne({ userId }).exec();
+        const farm = player.farm;
 
         // Check if each crop is mature
         const current = (new Date).getTime();
         let harvestGain = 0;
 
         const promises = [];
-        for (let i = 0; i < player.farmWidth; i++) {
+        for (let i = 0; i < player.farmHeight; i++) {
             for (let j = 0; j < player.farmWidth; j++) {
-                const index = i * player.farmWidth + j;
+                const index = i * player.farmHeight + j;
+
                 // Check if field is empty
-                if (crops[index].name === "Empty" || player.timer[index] === null) continue;
+                if (farm[index].name === 'Empty') continue;
+
+                // Get crop from crops.json
+                const { worth, growthTime } = crops.find(crop => crop.name === player.farm[index].name);
 
                 // Check if field is ready for harvest
-                if (player.timer[index].getTime() + crops[index].growthTime < current) {
-                    harvestGain += crops[index].worth;
+                if (farm[index].timer.getTime() + growthTime < current) {
+                    harvestGain += worth;
 
                     promises.push(Player.updateOne({ userId }, {
-                        $set: { [`farm.${index}`]: emptyCrop.id }
+                        $set: { [`farm.${index}`]: {
+                            [`farm.${index}`]: {
+                                name: 'Empty',
+                                timer: new Date
+                            },
+                        }}
                     }));
                 }
             }
@@ -42,7 +49,7 @@ module.exports = {
             Promise.all(promises)
                 .then(async () => {
                     await Player.updateOne({ userId }, {
-                        $set: { money: player.money + harvestGain }
+                        $inc: { money: harvestGain }
                     });
 
                     await interaction.reply(`Harvested $${harvestGain}!`);

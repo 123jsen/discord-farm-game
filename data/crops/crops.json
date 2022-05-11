@@ -1,0 +1,44 @@
+[
+    {
+        "name": "Empty",
+        "image": "🟫",
+        "cost": 0,
+        "worth": 0,
+        "growthTime": 0
+    },
+    {
+        "name": "Carrot",
+        "image": "🥕",
+        "cost": 20,
+        "worth": 28,
+        "growthTime": 40000
+    },
+    {
+        "name": "Mushroom",
+        "image": "🍄",
+        "cost": 25,
+        "worth": 40,
+        "growthTime": 45000
+    },
+    {
+        "name": "Potato",
+        "image": "🥔",
+        "cost": 42,
+        "worth": 75,
+        "growthTime": 50000
+    },
+    {
+        "name": "Corn",
+        "image": "🌽",
+        "cost": 70,
+        "worth": 125,
+        "growthTime": 90000
+    },
+    {
+        "name": "Rice",
+        "image": "🌾",
+        "cost": 150,
+        "worth": 270,
+        "growthTime": 90000
+    }
+]

@@ -1,0 +1,114 @@
+[
+    {
+        "name": "Empty",
+        "target": "empty",
+        "image": "🏗️"
+    },
+    {
+        "name": "Lumber Mill",
+        "target": "wood",
+        "image": "🪵",
+        "levels" : [
+            {
+                "level": 1,
+                "effect": 100,
+                "cost":  [500, 0, 0, 0]
+            },
+            {
+                "level": 2,
+                "effect": 650,
+                "cost": [5000, 900, 400, 400]
+            },
+            {
+                "level": 3,
+                "effect": 3200,
+                "cost": [65000, 13000, 8000, 8000]
+            },
+            {
+                "level": 4,
+                "effect": 6500,
+                "cost": [250000, 35000, 20000, 20000]
+            },
+            {
+                "level": 5,
+                "effect": 18000,
+                "cost": [750000, 150000, 90000, 90000]
+            }
+        ]
+    },
+    {
+        "name": "Stone Quarry",
+        "target": "stone",
+        "image": "🪨",
+        "levels" : [
+            {
+                "level": 1,
+                "effect": 100,
+                "cost":  [500, 0, 0, 0]
+            },
+            {
+                "level": 2,
+                "effect": 650,
+                "cost": [5000, 400, 900, 400]
+            },
+            {
+                "level": 3,
+                "effect": 3200,
+                "cost": [65000, 8000, 13000, 8000]
+            },
+            {
+                "level": 4,
+                "effect": 6500,
+                "cost": [250000, 20000, 35000, 20000]
+            },
+            {
+                "level": 5,
+                "effect": 18000,
+                "cost": [750000, 90000, 150000, 90000]
+            }
+        ]
+    },
+    {
+        "name": "Recycling Shop",
+        "target": "metal",
+        "image": "🔧",
+        "levels" : [
+            {
+                "level": 1,
+                "effect": 100,
+                "cost":  [500, 0, 0, 0]
+            },
+            {
+                "level": 2,
+                "effect": 650,
+                "cost": [5000, 400, 400, 900]
+            },
+            {
+                "level": 3,
+                "effect": 3200,
+                "cost": [65000, 8000, 8000, 13000]
+            },
+            {
+                "level": 4,
+                "effect": 6500,
+                "cost": [250000, 20000, 20000, 35000]
+            },
+            {
+                "level": 5,
+                "effect": 18000,
+                "cost": [750000, 90000, 90000, 150000]
+            }
+        ]
+    },
+    {
+        "name": "Extra Plots",
+        "target": "farmHeight",
+        "image": "🟫",
+        "levels" : [
+            {
+                "level": 1,
+                "cost":  [0, 1000, 1000, 1000]
+            }
+        ]
+    }
+]

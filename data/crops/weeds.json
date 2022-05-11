@@ -1,0 +1,37 @@
+[
+    {
+        "name": "Homegrown",
+        "image": "🪴",
+        "cost": 240,
+        "worth": 480,
+        "growthTime": 900000
+    },
+    {
+        "name": "Diesel",
+        "image": "⛽",
+        "cost": 800,
+        "worth": 1550,
+        "growthTime": 1260000
+    },
+    {
+        "name": "Labmade",
+        "image": "⚗️",
+        "cost": 1350,
+        "worth": 2770,
+        "growthTime": 1500000
+    },
+    {
+        "name": "Girl Scout Cookies",
+        "image": "🍪",
+        "cost": 2300,
+        "worth": 3910,
+        "growthTime": 1600000
+    },
+    {
+        "name": "Strawberry Bliss",
+        "image": "🍓",
+        "cost": 3400,
+        "worth": 5610,
+        "growthTime": 1700000
+    }
+]
