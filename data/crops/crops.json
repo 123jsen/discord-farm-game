@@ -33,5 +33,12 @@
         "cost": 70,
         "worth": 125,
         "growthTime": 90000
+    },
+    {
+        "name": "Rice",
+        "image": "🌾",
+        "cost": 150,
+        "worth": 270,
+        "growthTime": 90000
     }
 ]

@@ -113,7 +113,7 @@ module.exports = {
             }
 
             if (!checkEnoughMoney(nextTier.cost, player)) {
-                await interaction.reply({ content: `You need $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${category.name}`, ephemeral: true });
+                await interaction.reply({ content: `You need $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${category.name} to level ${currentBuilding.level + 1}`, ephemeral: true });
                 return;
             }
 

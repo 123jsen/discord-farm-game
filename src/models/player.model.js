@@ -85,15 +85,18 @@ PlayerSchema.static('updateOneProduction', async function(document) {
 
     if (woodCount == 1) document.woodCapacity *= 1.0;
     if (woodCount == 2) document.woodCapacity *= 1.4;
-    if (woodCount >= 3) document.woodCapacity *= 2.0;
+    if (woodCount == 3) document.woodCapacity *= 2.0;
+    if (woodCount >= 4) document.woodCapacity *= 2.3;
 
     if (stoneCount == 1) document.stoneCapacity *= 1.0;
     if (stoneCount == 2) document.stoneCapacity *= 1.4;
-    if (stoneCount >= 3) document.stoneCapacity *= 2.0;
+    if (stoneCount == 3) document.stoneCapacity *= 2.0;
+    if (stoneCount >= 4) document.stoneCapacity *= 2.3;
 
     if (metalCount == 1) document.metalCapacity *= 1.0;
     if (metalCount == 2) document.metalCapacity *= 1.4;
-    if (metalCount >= 3) document.metalCapacity *= 2.0;
+    if (metalCount == 3) document.metalCapacity *= 2.0;
+    if (metalCount >= 4) document.metalCapacity *= 2.3;
 
     await document.save();
 });
