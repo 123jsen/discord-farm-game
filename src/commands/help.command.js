@@ -24,6 +24,6 @@ module.exports = {
                 { name: '/build', value: 'Build a building at a spot' },
                 { name: '/destroy', value: 'Destroy a building and get 50% of its price back' })
 
-        await interaction.reply({ embeds: [helpEmbed] });
+        await interaction.reply({ embeds: [helpEmbed], ephemeral: true });
     },
 };
