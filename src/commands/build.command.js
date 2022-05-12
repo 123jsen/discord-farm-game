@@ -89,7 +89,7 @@ module.exports = {
                 player.metal -= buildLevel.cost[3]
 
             // Update Player Production Capacities
-            await Player.updateOneProduction(player);
+            await Player.updateBuildings(player);
 
             await player.save();
 
@@ -129,7 +129,7 @@ module.exports = {
             player.metal -= nextTier.cost[3];
 
             // Update Player Production Capacities
-            await Player.updateOneProduction(player);
+            await Player.updateBuildings(player);
 
             await player.save();
 

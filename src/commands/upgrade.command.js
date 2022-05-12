@@ -50,8 +50,8 @@ module.exports = {
             $set: {
                 money: player.money - nextTier.cost[0],
                 wood: player.wood - nextTier.cost[1],
-                stone: player.wood - nextTier.cost[2],
-                metal: player.wood - nextTier.cost[3]
+                stone: player.stone - nextTier.cost[2],
+                metal: player.metal - nextTier.cost[3]
             }
         });
 

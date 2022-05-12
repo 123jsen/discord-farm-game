@@ -52,10 +52,12 @@ PlayerSchema.virtual('farmArea').get(function() {
 });
 
 // This static method checks buildings and update 
-PlayerSchema.static('updateOneProduction', async function(document) {
+PlayerSchema.static('updateBuildings', async function(document) {
     document.woodCapacity = 0;
     document.stoneCapacity = 0;
     document.metalCapacity = 0;
+
+    document.farmHeight = 3;
 
     const woodFarm = buildings.find(build => build.target === 'wood');
     const stoneFarm = buildings.find(build => build.target === 'stone');
@@ -80,6 +82,9 @@ PlayerSchema.static('updateOneProduction', async function(document) {
         else if (document.building[i].name === 'Recycling Shop') {
             metalCount ++;
             document.metalCapacity += metalFarm.levels[level - 1].effect;
+        }
+        else if (document.building[i].name === 'Extra Plots') {
+            document.farmHeight ++;
         }
     }
 

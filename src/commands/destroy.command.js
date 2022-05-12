@@ -54,7 +54,7 @@ module.exports = {
         }
 
         // Update Player Production Capacities
-        await Player.updateOneProduction(player);
+        await Player.updateBuildings(player);
 
         await player.save();
 
