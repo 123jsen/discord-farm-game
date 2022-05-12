@@ -46,7 +46,7 @@ module.exports = {
 
         const promises = [];
 
-        for (index = 0; index < player.farmWidth * player.farmHeight; index++) {
+        for (index = 0; index < player.farmArea; index++) {
             if (crops[index].name !== "Empty") {
                 occupiedField++;
                 continue;

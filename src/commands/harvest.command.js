@@ -16,29 +16,27 @@ module.exports = {
         let harvestGain = 0;
 
         const promises = [];
-        for (let i = 0; i < player.farmHeight; i++) {
-            for (let j = 0; j < player.farmWidth; j++) {
-                const index = i * player.farmHeight + j;
+        for (let index = 0; index < player.farmArea; index++) {
+            // Check if field is empty
+            if (farm[index].name === 'Empty') continue;
 
-                // Check if field is empty
-                if (farm[index].name === 'Empty') continue;
+            // Get crop from crops.json
+            const { worth, growthTime } = crops.find(crop => crop.name === player.farm[index].name);
 
-                // Get crop from crops.json
-                const { worth, growthTime } = crops.find(crop => crop.name === player.farm[index].name);
+            // Check if field is ready for harvest
+            if (farm[index].timer.getTime() + growthTime < current) {
+                harvestGain += worth;
 
-                // Check if field is ready for harvest
-                if (farm[index].timer.getTime() + growthTime < current) {
-                    harvestGain += worth;
-
-                    promises.push(Player.updateOne({ userId }, {
-                        $set: { [`farm.${index}`]: {
+                promises.push(Player.updateOne({ userId }, {
+                    $set: {
+                        [`farm.${index}`]: {
                             [`farm.${index}`]: {
                                 name: 'Empty',
                                 timer: new Date
                             },
-                        }}
-                    }));
-                }
+                        }
+                    }
+                }));
             }
         }
 
