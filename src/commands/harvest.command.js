@@ -25,33 +25,23 @@ module.exports = {
 
             // Check if field is ready for harvest
             if (farm[index].timer.getTime() + growthTime < current) {
-                harvestGain += worth;
+                player.farm[index] = {
+                    name: 'Empty',
+                    timer: new Date
+                }
 
-                promises.push(Player.updateOne({ userId }, {
-                    $set: {
-                        [`farm.${index}`]: {
-                            [`farm.${index}`]: {
-                                name: 'Empty',
-                                timer: new Date
-                            },
-                        }
-                    }
-                }));
+                harvestGain += worth;
             }
         }
 
         if (harvestGain === 0) {
             await interaction.reply({ content: 'Nothing was harvested', ephemeral: true });
+            return;
         }
-        else {
-            Promise.all(promises)
-                .then(async () => {
-                    await Player.updateOne({ userId }, {
-                        $inc: { money: harvestGain }
-                    });
 
-                    await interaction.reply(`Harvested $${harvestGain}!`);
-                });
-        }
+        player.money += harvestGain;
+        await player.save();
+        
+        await interaction.reply(`Harvested $${harvestGain}!`);
     },
 };

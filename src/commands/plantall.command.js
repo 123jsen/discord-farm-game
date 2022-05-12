@@ -26,11 +26,8 @@ module.exports = {
 
     async execute(interaction) {
         const seed = interaction.options.getString('seed');
-
         const userId = interaction.user.id;
-
         const player = await Player.findOne({ userId }).exec();
-        const crops = player.farm;
 
         const newCrop = cropList.find(crop => crop.name === seed);
 
@@ -41,53 +38,36 @@ module.exports = {
 
         let cropPlanted = 0;
         let occupiedField = 0;
-        let totalCost = 0;
-        let index = 0;
 
-        const promises = [];
-
-        for (index = 0; index < player.farmArea; index++) {
-            if (crops[index].name !== "Empty") {
+        for (let index = 0; index < player.farmArea; index++) {
+            if (player.farm[index].name !== "Empty") {
                 occupiedField++;
                 continue;
             }
 
             // Player has enough money
-            if (player.money >= totalCost + newCrop.cost) {
-                promises.push(
-                    Player.updateOne({ userId }, {
-                        $set: {
-                            [`farm.${index}`]: {
-                                name: newCrop.name,
-                                timer: new Date
-                            }
-                        }
-                    })
-                )
-                
+            if (player.money >= newCrop.cost) {
+                player.farm[index] = {
+                    name: newCrop.name,
+                    timer: new Date
+                }
+
                 cropPlanted++;
-                totalCost += newCrop.cost;
+                player.money -= newCrop.cost;
             }
         }
 
-        if (promises.length === 0) {
-            if (occupiedField === player.farmWidth * player.farmHeight)
+        if (cropPlanted == 0) {
+            if (occupiedField == player.farmArea)
                 await interaction.reply({ content: 'No crops are planted. The farm is full', ephemeral: true });
             else
                 await interaction.reply({ content: `No crops are planted. You have $${player.money}`, ephemeral: true });
             return;
         }
 
-        Promise
-            .all(promises)
-            .then(async () => {
-                await Player.updateOne({ userId }, {
-                    $set: {
-                        money: player.money - totalCost
-                    }
-                })
-                await interaction.reply(`Spent $${totalCost} and planted ${cropPlanted} ${newCrop.name} in total`)
-            })
+        await player.save();
+
+        await interaction.reply(`Spent $${cropPlanted * newCrop.cost} and planted ${cropPlanted} ${newCrop.name} in total`);
     },
 };
 

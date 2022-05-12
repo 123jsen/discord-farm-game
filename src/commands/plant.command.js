@@ -42,12 +42,11 @@ module.exports = {
 
 		const userId = interaction.user.id;
 		const player = await Player.findOne({ userId }).exec();
-		const crops = player.farm;
 
 		const newCrop = cropList.find(crop => crop.name === seed);
 
 		if (row >= player.farmHeight || col >= player.farmWidth) {
-			await interaction.reply({ content: 'Coordinates are out of bound', ephemeral: true});
+			await interaction.reply({ content: 'Coordinates are out of bound', ephemeral: true });
 			return;
 		}
 
@@ -59,25 +58,18 @@ module.exports = {
 		// Calculate index (row major ordering)
 		const index = row * player.farmWidth + col;
 
-		if (crops[index].name !== "Empty") {
+		if (player.farm[index].name !== "Empty") {
 			await interaction.reply({ content: 'Farmland is not empty', ephemeral: true });
 			return;
 		}
 
-		if (!newCrop) {
-			await interaction.reply({ content: `Crop named ${newCrop.name} is not found`, ephemeral: true });
-			return;
+		player.farm[index] = {
+			name: newCrop.name,
+			timer: new Date
 		}
+		player.money -= newCrop.cost;
 
-		await Player.updateOne({ userId }, {
-			$set: {
-				[`farm.${index}`]: {
-					name: newCrop.name,
-					timer: new Date
-				},
-				money: player.money - newCrop.cost
-			}
-		});
+		await player.save();
 
 		await interaction.reply(`Spent $${newCrop.cost} and planted ${newCrop.name}\n`);
 	},

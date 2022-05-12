@@ -83,10 +83,10 @@ module.exports = {
                 name: category.name,
                 level: 1
             };
-            player.money -= buildLevel.cost[0],
-                player.wood -= buildLevel.cost[1],
-                player.stone -= buildLevel.cost[2],
-                player.metal -= buildLevel.cost[3]
+            player.money -= buildLevel.cost[0];
+            player.wood -= buildLevel.cost[1];
+            player.stone -= buildLevel.cost[2];
+            player.metal -= buildLevel.cost[3];
 
             // Update Player Production Capacities
             await Player.updateBuildings(player);
