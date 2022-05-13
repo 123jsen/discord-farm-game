@@ -36,7 +36,7 @@ module.exports = {
         }
 
         player.money += harvestGain;
-        await player.save();
+        player.save();
         
         await interaction.reply(`Harvested $${harvestGain}!`);
     },

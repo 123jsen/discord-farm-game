@@ -1,8 +1,11 @@
 // Handle arguments to init-game
 const arguments = process.argv.slice(2);
 let deleteFlag = false;
+let cheatFlag = false;
 
-if (arguments.length === 0) console.log('Running default setup');
+if (arguments.length === 0) {
+    console.log('Use -h for to know all options');
+}
 
 if (arguments.includes('-h')) {
     const { content } = require('./help.json');
@@ -10,9 +13,14 @@ if (arguments.includes('-h')) {
     process.exit(0);
 }
 
-if (arguments.includes('-d')) {
+if (arguments.includes('--delete')) {
     deleteFlag = true;
     console.log("Delete Flag: True");
+}
+
+if (arguments.includes('--cheat')) {
+    cheatFlag = true;
+    console.log("Cheat Flag: True");
 }
 
 // Database
@@ -32,25 +40,29 @@ db.once('open', async () => {
     console.log('=====')
     console.log('Connection to mongoDB server Success');
 
+    const players = await Player.find({});
+
+    for (let i = 0; i < players.length; i++)
+    {
+        console.log(`Player ${i} name: ${players[i].farmName} userId: ${players[i].userId}`);
+    }
+
     if (deleteFlag) {
         await Player.deleteMany({});
         console.log('Deleted all player data');
     }
 
-    const promises = [];
-
-    if (promises.length === 0 && !deleteFlag)
-    {
-        console.log('Nothing was edited');
-        console.log('=====')
-        process.exit(0);
+    if (cheatFlag) {
+        for (let i = 0; i < players.length; i++)
+        {
+            players[i].money += 100000000;
+            players[i].wood += 100000000;
+            players[i].stone += 100000000;
+            players[i].metal += 100000000;
+            await players[i].save();
+        }
     }
 
-    Promise
-        .all(promises)
-        .then(() => {
-            console.log('init-game success');
-            console.log('=====')
-            process.exit(0);
-        })
+    console.log('=====')
+    process.exit(0);
 });

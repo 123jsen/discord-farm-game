@@ -66,7 +66,8 @@ module.exports = {
         player[resourceType] -= amount;
         targetPlayer[resourceType] += amount;
 
-        await Promise.all([player.save(), targetPlayer.save()]);
+        player.save();
+        targetPlayer.save();
 
         await interaction.reply(`<@${userId}> gave ${amount} ${resourceType} to <@${targetId}>`);
     },

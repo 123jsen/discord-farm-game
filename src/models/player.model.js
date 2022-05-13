@@ -84,7 +84,7 @@ PlayerSchema.static('calculateBuildingsEffect', function(document) {
             document.metalCapacity += metalFarm.levels[level - 1].effect;
         }
         else if (document.building[i].name === 'Extra Plots') {
-            document.farmHeight ++;
+            document.farmHeight += document.building[i].level;
         }
     }
 

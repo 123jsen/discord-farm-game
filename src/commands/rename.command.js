@@ -15,11 +15,11 @@ module.exports = {
     async execute(interaction, player) {
         const newName = interaction.options.getString('name');
 
-        await Player.updateOne({ userId: interaction.user.id }, {
+        Player.updateOne({ userId: interaction.user.id }, {
             $set: {
                 farmName: newName
             }
-        });
+        }).exec();
 
         await interaction.reply({ content: `Farm name now changed to ${newName}`, ephemeral: true});
     },

@@ -25,14 +25,11 @@ module.exports = {
                 .addChoices(...choices)),
 
     async execute(interaction, player) {
-        const userId = interaction.user.id;
-
         // Upgrade Option is value of option, i.e. farmWidth
         const upgradeOption = interaction.options.getString('type');
 
         // Category is object for that target
         const category = upgrades.find(upgrade => (upgrade.target === upgradeOption));
-
         const nextTier = category.levels.find(item => (item.level === (player[upgradeOption] + 1)));
 
         if (!nextTier) {
@@ -45,50 +42,34 @@ module.exports = {
             return;
         }
 
-        await Player.updateOne({ userId }, {
-            $set: {
-                money: player.money - nextTier.cost[0],
-                wood: player.wood - nextTier.cost[1],
-                stone: player.stone - nextTier.cost[2],
-                metal: player.metal - nextTier.cost[3]
-            }
-        });
+        player.money -= nextTier.cost[0];
+        player.wood -= nextTier.cost[1];
+        player.stone -= nextTier.cost[2];
+        player.metal -= nextTier.cost[3];
+
 
         if (upgradeOption === 'farmWidth') {
-            const farm = player.farm;
+            player.farmWidth++;
 
-            for (let i = player.farmArea; i < (player.farmWidth + 1) * player.farmHeight; i++) {
-                farm.push({
-                    name: 'Empty',
-                    timer: new Date
-                });
-            }
-
-            await Player.updateOne({ userId }, {
-                $set: {
-                    farm,
-                    farmWidth: player.farmWidth + 1
-                }
+            // If farmWidth increases, then there are farmHeight more plots.
+            const extraFarm = Array(player.farmHeight).fill({
+                name: 'Empty',
+                timer: new Date
             });
+
+            player.farm.push(...extraFarm);
         }
 
         if (upgradeOption === 'buildingSlots') {
-            const building = player.building;
-
-            building.push({
+            player.building.push({
                 name: 'Empty',
                 level: 0
             });
 
-            await Player.updateOne({ userId }, {
-                $inc: {
-                    buildingSlots: 1
-                },
-                $set: {
-                    building,
-                }
-            });
+            player.buildingSlots++;
         }
+
+        player.save();
 
         await interaction.reply(`Spent $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${category.name} to tier ${nextTier.level}`);
     },

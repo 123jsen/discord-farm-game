@@ -61,21 +61,15 @@ module.exports = {
             }
 
             if (buildOption === 'farmHeight') {
-                const farm = player.farm;
+                player.farmHeight++;
 
-                for (let i = player.farmArea; i < player.farmWidth * (player.farmHeight + 1); i++) {
-                    farm.push({
-                        name: 'Empty',
-                        timer: new Date
-                    });
-                }
-
-                await Player.updateOne({ userId }, {
-                    $set: {
-                        farm,
-                        farmHeight: player.farmHeight + 1
-                    }
+                // If farmWidth increases, then there are farmHeight more plots.
+                const extraFarm = Array(player.farmWidth).fill({
+                    name: 'Empty',
+                    timer: new Date
                 });
+    
+                player.farm.push(...extraFarm);
             }
 
             player.building[index] = {
@@ -130,7 +124,7 @@ module.exports = {
             // Update Player Production Capacities
             Player.calculateBuildingsEffect(player);
 
-            await player.save();
+            player.save();
 
             await interaction.reply(`You spent $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${category.name} to level ${currentBuilding.level + 1}`);
         }

@@ -1,6 +1,6 @@
 {
   "name": "discord-farm-game",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": "src/app.js",
   "scripts": {
     "commands": "node src/initialization/deploy-commands.js"

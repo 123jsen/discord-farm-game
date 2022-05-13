@@ -45,7 +45,7 @@ module.exports = {
 
         player.money -= amount * GOLD_PER_RESOURCES;
         player[resourceType] += amount;
-        await player.save();
+        player.save();
 
         await interaction.reply(`You bought ${amount} ${resourceType} with $${amount * GOLD_PER_RESOURCES}`);
     },

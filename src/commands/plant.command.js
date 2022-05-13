@@ -67,7 +67,7 @@ module.exports = {
 		}
 		player.money -= newCrop.cost;
 
-		await player.save();
+		player.save();
 
 		await interaction.reply(`Spent $${newCrop.cost} and planted ${newCrop.name}\n`);
 	},

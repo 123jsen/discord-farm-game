@@ -63,7 +63,7 @@ module.exports = {
             return;
         }
 
-        await player.save();
+        player.save();
 
         await interaction.reply(`Spent $${cropPlanted * newCrop.cost} and planted ${cropPlanted} ${newCrop.name} in total`);
     },

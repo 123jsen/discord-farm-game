@@ -53,7 +53,7 @@ module.exports = {
         // Update Player Production Capacities
         Player.calculateBuildingsEffect(player);
 
-        await player.save();
+        player.save();
 
         await interaction.reply(`${buildingName} is destroyed`);
     },
