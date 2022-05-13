@@ -33,5 +33,12 @@
         "cost": 3400,
         "worth": 5610,
         "growthTime": 1700000
+    },
+    {
+        "name": "Super Silver Haze",
+        "image": "🌫️",
+        "cost": 3400,
+        "worth": 6400,
+        "growthTime": 2550000
     }
 ]

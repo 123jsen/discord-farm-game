@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const Player = require('../models/player.model.js');
 const upgrades = require('../../data/upgrades/export.js');
 const { checkEnoughMoney } = require('../player.js');
 
