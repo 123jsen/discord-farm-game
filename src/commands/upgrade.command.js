@@ -24,9 +24,8 @@ module.exports = {
                 .setRequired(true)
                 .addChoices(...choices)),
 
-    async execute(interaction) {
+    async execute(interaction, player) {
         const userId = interaction.user.id;
-        const player = await Player.findOne({ userId }).exec();
 
         // Upgrade Option is value of option, i.e. farmWidth
         const upgradeOption = interaction.options.getString('type');

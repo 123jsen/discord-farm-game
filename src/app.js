@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 require('dotenv').config();
 
 // Imports from project files
-const { createPlayer } = require('./player.js');
+const { findOrCreatePlayer } = require('./player.js');
 const Player = require('./models/player.model.js');
 
 const dbUri = process.env.MONGODB_URI;
@@ -49,12 +49,12 @@ db.once("open", () => {
 		if (!command) return;
 
 		// Middleware
-		await createPlayer(interaction);
-		await Player.calculateProduction(interaction.user.id);
+		const player = await findOrCreatePlayer(interaction);
+		await Player.updateProduction(player);
 
 		// Executing commands
 		try {
-			await command.execute(interaction);
+			await command.execute(interaction, player);
 		} catch (error) {
 			console.error(error);
 			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });

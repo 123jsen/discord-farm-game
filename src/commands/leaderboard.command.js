@@ -8,7 +8,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('leaderboard')
         .setDescription('Show the top five richest player'),
-    async execute(interaction) {
+    async execute(interaction, player) {
         // -1 gives maximum
         const players = await Player.find().sort({ money: -1 }).limit(5).exec();
 

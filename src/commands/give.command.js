@@ -41,7 +41,7 @@ module.exports = {
                 .setDescription('Amount of resources')
                 .setRequired(true)),
 
-    async execute(interaction) {
+    async execute(interaction, player) {
         const userId = interaction.user.id;
         const targetId = interaction.options.getUser('target').id;
 
@@ -49,18 +49,7 @@ module.exports = {
             await interaction.reply({ content: 'You cannot give resources to yourself', ephemeral: true });
             return;
         }
-
-        let player;
-        let targetPlayer;
-
-        await Promise.all([
-            Player.findOne({ userId }),
-            Player.findOne({ userId: targetId })
-        ]).then(results => {
-            player = results[0];
-            targetPlayer = results[1];
-        })
-        
+        const targetPlayer = await Player.findOne({ userId: targetId });
 
         if (!targetPlayer) {
             await interaction.reply({ content: 'That Player is not found', ephemeral: true });

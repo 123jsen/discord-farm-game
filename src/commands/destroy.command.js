@@ -17,12 +17,9 @@ module.exports = {
                 .setDescription('Destroy building at column.')
                 .setRequired(true)),
 
-    async execute(interaction) {
+    async execute(interaction, player) {
         const row = interaction.options.getInteger('row') - 1;
         const col = interaction.options.getInteger('col') - 1;
-
-        const userId = interaction.user.id;
-        const player = await Player.findOne({ userId }).exec();
 
         const index = row * player.buildingWidth + col;
 
@@ -54,7 +51,7 @@ module.exports = {
         }
 
         // Update Player Production Capacities
-        await Player.updateBuildings(player);
+        Player.calculateBuildingsEffect(player);
 
         await player.save();
 

@@ -12,8 +12,7 @@ module.exports = {
                 .setDescription('Name of your farm')
                 .setRequired(true)),
 
-    async execute(interaction) {
-        const player = await Player.findOne({ userId: interaction.user.id }).exec();
+    async execute(interaction, player) {
         const newName = interaction.options.getString('name');
 
         await Player.updateOne({ userId: interaction.user.id }, {

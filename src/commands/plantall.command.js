@@ -24,10 +24,8 @@ module.exports = {
                 .setRequired(true)
                 .addChoices(...cropChoices)),
 
-    async execute(interaction) {
+    async execute(interaction, player) {
         const seed = interaction.options.getString('seed');
-        const userId = interaction.user.id;
-        const player = await Player.findOne({ userId }).exec();
 
         const newCrop = cropList.find(crop => crop.name === seed);
 

@@ -52,7 +52,7 @@ PlayerSchema.virtual('farmArea').get(function() {
 });
 
 // This static method checks buildings and update 
-PlayerSchema.static('updateBuildings', async function(document) {
+PlayerSchema.static('calculateBuildingsEffect', function(document) {
     document.woodCapacity = 0;
     document.stoneCapacity = 0;
     document.metalCapacity = 0;
@@ -102,15 +102,10 @@ PlayerSchema.static('updateBuildings', async function(document) {
     if (metalCount == 2) document.metalCapacity *= 1.4;
     if (metalCount == 3) document.metalCapacity *= 2.0;
     if (metalCount >= 4) document.metalCapacity *= 2.3;
-
-    await document.save();
 });
 
 // Update lastHarvested
-PlayerSchema.static('calculateProduction', async function(userId) {
-    // Find player
-    let player = await this.findOne({ userId }).exec();
-
+PlayerSchema.static('updateProduction', async function(player) {
     // Time in milliseconds
     const timePassed = Date.now() - player.lastHarvested.getTime();
     const hourPassed = timePassed / (1000 * 60 * 60);

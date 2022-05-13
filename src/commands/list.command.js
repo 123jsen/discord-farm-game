@@ -29,7 +29,7 @@ module.exports = {
                 .setDescription('Check price of items')
                 .setRequired(true)
                 .addChoices(...choices)),
-    async execute(interaction) {
+    async execute(interaction, player) {
         const type = interaction.options.getString('item');
 
         const fields = [];

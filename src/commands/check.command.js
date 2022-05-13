@@ -18,12 +18,10 @@ module.exports = {
                 .setDescription('Check crop at column.')
                 .setRequired(true)),
 
-    async execute(interaction) {
+    async execute(interaction, player) {
         const row = interaction.options.getInteger('row') - 1;
         const col = interaction.options.getInteger('col') - 1;
-
-        const userId = interaction.user.id;
-        const player = await Player.findOne({ userId }).exec();
+        
         const farm = player.farm;
 
         if (row >= player.farmHeight || col >= player.farmWidth) {

@@ -13,26 +13,28 @@ function checkEnoughMoney(costArray, player) {
         return true;
 }
 
-async function createPlayer(interaction) {
+async function findOrCreatePlayer(interaction) {
     const userId = interaction.user.id;
     let player = await Player.findOne({ userId });
 
     // No creation needed if player is already in DB
-    if (player) return;
+    if (!player) {
+        // Fill Building and Farm Slots
+        const emptyFarm = Array(9).fill({ name: 'Empty', timer: new Date });
+        const emptyBuilding = Array(4).fill({ name: 'Empty', level: 0 });
 
-    // Fill Building and Farm Slots
-    const emptyFarm = Array(9).fill({ name: 'Empty', timer: new Date });
-    const emptyBuilding = Array(4).fill({ name: 'Empty', level: 0 });
+        player = await Player.create({
+            userId,
+            farmName: `${interaction.user.username}'s Farm`,
+            money: DEFAULT_MONEY,
+            building: emptyBuilding,
+            farm: emptyFarm
+        });
 
-    player = await Player.create({
-        userId,
-        farmName: `${interaction.user.username}'s Farm`,
-        money: DEFAULT_MONEY,
-        building: emptyBuilding,
-        farm: emptyFarm
-    });
+        console.log(`Created new player for ${interaction.user.username}`);
+    }
 
-    console.log(`Created new player for ${interaction.user.username}`);
+    return player;
 }
 
-module.exports = { checkEnoughMoney, createPlayer };
+module.exports = { checkEnoughMoney, findOrCreatePlayer };

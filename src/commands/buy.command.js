@@ -34,10 +34,7 @@ module.exports = {
                 .setRequired(true)
                 .addChoices(...choices)),
 
-    async execute(interaction) {
-        const userId = interaction.user.id;
-        const player = await Player.findOne({ userId }).exec();
-
+    async execute(interaction, player) {
         const amount = interaction.options.getInteger('amount');
         const resourceType = interaction.options.getString('resources');
 

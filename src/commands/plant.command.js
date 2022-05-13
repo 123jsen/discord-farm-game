@@ -34,14 +34,12 @@ module.exports = {
 				.setRequired(true)
 				.addChoices(...cropChoices)),
 
-	async execute(interaction) {
+	async execute(interaction, player) {
 		// Need offset by 1
 		const row = interaction.options.getInteger('row') - 1;
 		const col = interaction.options.getInteger('col') - 1;
+		
 		const seed = interaction.options.getString('seed');
-
-		const userId = interaction.user.id;
-		const player = await Player.findOne({ userId }).exec();
 
 		const newCrop = cropList.find(crop => crop.name === seed);
 

@@ -34,9 +34,8 @@ module.exports = {
                 .setRequired(true)
                 .addChoices(...choices)),
 
-    async execute(interaction) {
+    async execute(interaction, player) {
         const userId = interaction.user.id;
-        const player = await Player.findOne({ userId }).exec();
 
         const row = interaction.options.getInteger('row') - 1;
         const col = interaction.options.getInteger('col') - 1;
@@ -89,7 +88,7 @@ module.exports = {
             player.metal -= buildLevel.cost[3];
 
             // Update Player Production Capacities
-            await Player.updateBuildings(player);
+            Player.calculateBuildingsEffect(player);
 
             await player.save();
 
@@ -129,7 +128,7 @@ module.exports = {
             player.metal -= nextTier.cost[3];
 
             // Update Player Production Capacities
-            await Player.updateBuildings(player);
+            Player.calculateBuildingsEffect(player);
 
             await player.save();
 
