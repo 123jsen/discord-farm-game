@@ -121,6 +121,18 @@ module.exports = {
             player.stone -= nextTier.cost[2];
             player.metal -= nextTier.cost[3];
 
+            if (buildOption === 'farmHeight') {
+                player.farmHeight++;
+
+                // If farmWidth increases, then there are farmHeight more plots.
+                const extraFarm = Array(player.farmWidth).fill({
+                    name: 'Empty',
+                    timer: new Date
+                });
+    
+                player.farm.push(...extraFarm);
+            }
+
             // Update Player Production Capacities
             Player.calculateBuildingsEffect(player);
 
