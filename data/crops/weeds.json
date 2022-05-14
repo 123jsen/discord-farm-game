@@ -28,17 +28,17 @@
         "growthTime": 1600000
     },
     {
+        "name": "Super Silver Haze",
+        "image": "🌫️",
+        "cost": 3400,
+        "worth": 6450,
+        "growthTime": 2550000
+    },
+    {
         "name": "Strawberry Bliss",
         "image": "🍓",
         "cost": 3400,
         "worth": 5610,
         "growthTime": 1700000
-    },
-    {
-        "name": "Super Silver Haze",
-        "image": "🌫️",
-        "cost": 3400,
-        "worth": 6400,
-        "growthTime": 2550000
     }
 ]
