@@ -19,9 +19,11 @@ module.exports = {
         const targetPlayer = await Player.findOne({ userId: targetId });
 
         if (!targetPlayer) {
-            await interaction.reply({ content: 'That Player is not found', ephemeral: true });
+            await interaction.reply({ content: 'That player is not found', ephemeral: true });
             return;
         }
+
+        await Player.updateProduction(targetPlayer);
 
         let resourceStr = '';
         resourceStr = resourceStr.concat(`🪙 $${Math.round(targetPlayer.money)} \n`);
