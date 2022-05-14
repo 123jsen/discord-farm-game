@@ -3,6 +3,7 @@
   "version": "2.0.3",
   "main": "src/app.js",
   "scripts": {
+    "start": "node .",
     "commands": "node src/initialization/deploy-commands.js"
   },
   "repository": "git@github.com:SenYanHo/discord-farm-game.git",
