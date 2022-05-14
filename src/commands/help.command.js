@@ -26,7 +26,7 @@ module.exports = {
                 { name: '/upgrade', value: 'Upgrade your farm' },
                 { name: '/build', value: 'Build a building at a spot' },
                 { name: '/checkbuild', value: 'Check what building is built there' },
-                { name: '/destroy', value: 'Destroy a building and get 50% of its price back' })
+                { name: '/destroy', value: 'Destroy a building and get some of its price back' })
 
         await interaction.reply({ embeds: [helpEmbed], ephemeral: true });
     },
