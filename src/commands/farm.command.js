@@ -1,6 +1,5 @@
 const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const Player = require('../models/player.model.js');
 const crops = require('../../data/crops/export.js');
 const buildings = require('../../data/buildings/export.js');
 
@@ -40,7 +39,7 @@ module.exports = {
                 { name: 'Money', value: `$${player.money}` },
                 { name: 'Resouces', value: resourceStr},
                 { name: 'Farm', value: farmStr },
-                { name: 'Building', value: buildStr }
+                { name: 'Buildings', value: buildStr }
             )
         await interaction.reply({ embeds: [farmEmbed] });
     },

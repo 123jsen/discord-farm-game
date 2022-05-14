@@ -1,11 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Player = require('../models/player.model.js');
 const buildings = require('../../data/buildings/export.js');
+const { REFUND_PERCENT } = require('../../data/config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('destroy')
-        .setDescription('Destroy a building and get a 50% refund of its price')
+        .setDescription(`Destroy a building and get ${REFUND_PERCENT} of its price back`)
         .addIntegerOption(option =>
             option
                 .setName('row')
@@ -40,10 +41,10 @@ module.exports = {
         const category = buildings.find(build => (build.name === buildingName));
         const buildingStats = category.levels[player.building[index].level - 1];
 
-        player.money += buildingStats.cost[0] * 0.5;
-        player.wood += buildingStats.cost[1] * 0.5;
-        player.stone += buildingStats.cost[2] * 0.5;
-        player.metal += buildingStats.cost[3] * 0.5;
+        player.money += buildingStats.cost[0] * REFUND_PERCENT;
+        player.wood += buildingStats.cost[1] * REFUND_PERCENT;
+        player.stone += buildingStats.cost[2] * REFUND_PERCENT;
+        player.metal += buildingStats.cost[3] * REFUND_PERCENT;
 
         player.building[index] = {
             name: 'Empty',
