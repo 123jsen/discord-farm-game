@@ -53,7 +53,7 @@ module.exports = {
             $inc: {
                 money: buyamount * contract.price
             }
-        });
+        }).exec();
 
         player.save();
 
