@@ -79,6 +79,11 @@ module.exports = {
         }
         else if (type == 'contracts') {
             const contracts = await Contract.find().sort({ price: 1 });
+            if (contracts.length == 0) {
+                await interaction.reply({ content: 'No contracts are posted', ephemeral: true });
+                return;
+            }
+
             contracts.forEach(contract => {
                 fields.push({
                     name: `ID: #${contract.contractId}`,
