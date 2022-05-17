@@ -23,6 +23,7 @@ async function findOrCreatePlayer(interaction) {
         const emptyFarm = Array(9).fill({ name: 'Empty', timer: new Date });
         const emptyBuilding = Array(4).fill({ name: 'Empty', level: 0 });
 
+        // Need await here since this is middleware
         player = await Player.create({
             userId,
             farmName: `${interaction.user.username}'s Farm`,
