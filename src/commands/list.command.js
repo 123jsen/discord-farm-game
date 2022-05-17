@@ -1,5 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const Contract = require('../models/contract.model.js');
 const buildings = require('../../data/buildings/export.js');
 const crops = require('../../data/crops/export.js');
 const upgrades = require('../../data/upgrades/export.js');
@@ -16,6 +17,10 @@ const choices = [
     {
         name: 'Upgrades',
         value: 'upgrades'
+    },
+    {
+        name: 'Contracts',
+        value: 'contracts'
     }
 ]
 
@@ -32,6 +37,7 @@ module.exports = {
     async execute(interaction, player) {
         const type = interaction.options.getString('item');
 
+        let title = 'Price List';
         const fields = [];
 
         if (type == 'crops') {
@@ -71,12 +77,21 @@ module.exports = {
                 })
             })
         }
+        else if (type == 'contracts') {
+            const contracts = await Contract.find().sort({ price: 1 });
+            contracts.forEach(contract => {
+                fields.push({
+                    name: `ID: #${contract.contractId}`,
+                    value: `${contract.contractSize} ${contract.resourceType}, $${contract.price} each by <@${contract.userId}>`
+                })
+            })
+        }
 
-        const priceEmbed = new MessageEmbed()
+        const listEmbed = new MessageEmbed()
             .setColor('#a84232')
-            .setTitle('Price List')
+            .setTitle(title)
             .addFields(...fields);
 
-        await interaction.reply({ embeds: [priceEmbed], ephemeral: true });
+        await interaction.reply({ embeds: [listEmbed], ephemeral: true });
     },
 };
