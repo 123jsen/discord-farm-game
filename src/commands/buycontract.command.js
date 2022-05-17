@@ -59,7 +59,7 @@ module.exports = {
 
         // Check if contract is empty, if yes delete
         if (contract.contractSize === 0) {
-            Contract.deleteOne({ contractId });
+            Contract.deleteOne({ contractId }).exec();
         } else
             contract.save();
 
