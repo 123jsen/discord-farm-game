@@ -57,6 +57,12 @@ module.exports = {
         }
 
         const amount = interaction.options.getInteger('amount');
+
+        if (amount <= 0) {
+            await interaction.reply({ content: 'Please give a positive number', ephemeral: true });
+            return;
+        }
+
         const resourceType = interaction.options.getString('resources');
         if (player[resourceType] < amount) {
             await interaction.reply({ content: `You don\'t have enough ${resourceType}`, ephemeral: true });

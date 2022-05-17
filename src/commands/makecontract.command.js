@@ -52,6 +52,12 @@ module.exports = {
             return;
         }
 
+        // Check if price is positive
+        if (price <= 0) {
+            await interaction.reply({ content: 'Please set a positive price', ephemeral: true });
+            return;
+        }
+
         player[resourceType] -= contractSize;
         player.save();
 
