@@ -19,7 +19,7 @@ module.exports = {
 
         let embedField = [];
         for (let i = 0; i < players.length; i++) {
-            embedField.push({ name: `${i + 1}. ${players[i].farmName}`, value: `$${players[i].money}` });
+            embedField.push({ name: `${i + 1}. ${players[i].farmName}`, value: `$${Math.round(players[i].money * 100) / 100}` });
         }
 
         const boardEmbed = new MessageEmbed()

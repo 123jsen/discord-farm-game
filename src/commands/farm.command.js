@@ -36,7 +36,7 @@ module.exports = {
             .setColor('#a84232')
             .setTitle(player.farmName)
             .addFields(
-                { name: 'Money', value: `$${player.money}` },
+                { name: 'Money', value: `$${Math.round(player.money * 100) / 100}` },
                 { name: 'Resouces', value: resourceStr},
                 { name: 'Farm', value: farmStr },
                 { name: 'Buildings', value: buildStr }
