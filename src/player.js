@@ -18,13 +18,10 @@ async function findOrCreatePlayer(interaction) {
     const userId = interaction.user.id;
     let player = await Player.findOne({ userId });
 
-    // No creation needed if player is already in DB
     if (!player) {
-        // Fill Building and Farm Slots
         const emptyFarm = Array(9).fill({ name: 'Empty', timer: new Date });
         const emptyBuilding = Array(4).fill({ name: 'Empty', level: 0 });
 
-        // Need await here since this is middleware
         player = await Player.create({
             userId,
             farmName: `${interaction.user.username}'s Farm`,
@@ -34,9 +31,10 @@ async function findOrCreatePlayer(interaction) {
         });
 
         console.log(`Created new player for ${interaction.user.username}`);
+        return { player, isNew: true };
     }
 
-    return player;
+    return { player, isNew: false };
 }
 
 async function findOrCreateServer(guildId) {

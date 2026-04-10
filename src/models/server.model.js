@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const ServerSchema = Schema({
     guildId: { type: String, required: true, unique: true },
+    welcomeChannelId: { type: String, default: null },
     race: {
         active:          { type: Boolean, default: false },
         initiatorId:     { type: String,  default: null },

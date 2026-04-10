@@ -20,7 +20,7 @@ db.once("open", () => {
 	console.log("connection to mongodb success");
 
 	// Create a new client instance
-	const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+	const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
 
 	client.commands = new Collection();
 	// fs uses absolute path
@@ -50,10 +50,21 @@ db.once("open", () => {
 		if (!command) return;
 
 		// Middleware
-		const player = await findOrCreatePlayer(interaction);
+		const { player, isNew } = await findOrCreatePlayer(interaction);
 		const server = await findOrCreateServer(interaction.guildId);
 		await Player.updateProduction(player);
 		await checkAndResolveExpiredRace(server);
+
+		// Welcome message for new players
+		if (isNew) {
+			const welcomeChannel = server.welcomeChannelId
+				? interaction.guild.channels.cache.get(server.welcomeChannelId)
+				: interaction.guild.channels.cache.find(c => c.name === 'dodos-weed-farm');
+
+			if (welcomeChannel) {
+				welcomeChannel.send(`🌾 Welcome to Dodo's Weed Farm, <@${interaction.user.id}>! Use /help to get started.`);
+			}
+		}
 
 		// Executing commands
 		try {
