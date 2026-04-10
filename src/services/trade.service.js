@@ -1,6 +1,7 @@
 // Trade service — handles give, contracts, and resource buying
 
 const { GOLD_PER_RESOURCES } = require('../../data/config.json');
+const { tryUnlock, formatUnlocked } = require('./achievement.service.js');
 
 /**
  * Give resources from one player to another.
@@ -32,10 +33,12 @@ async function give(senderPlayer, receiverPlayer, resourceType, amount, senderUs
     senderPlayer[resourceType] -= amount;
     receiverPlayer[resourceType] += amount;
 
+    const newAchievements = [tryUnlock(senderPlayer, 'Generous')].filter(Boolean);
+
     await senderPlayer.save();
     await receiverPlayer.save();
 
-    return { ok: true, message: `<@${senderUserId}> gave ${amount} ${resourceType} to <@${receiverUserId}>` };
+    return { ok: true, message: `<@${senderUserId}> gave ${amount} ${resourceType} to <@${receiverUserId}>` + formatUnlocked(newAchievements) };
 }
 
 /**
@@ -64,12 +67,14 @@ async function makeContract(player, userId, resourceType, price, contractSize, C
     const prevContract = await ContractModel.findOne().sort({ contractId: -1 }).limit(1);
     const nextContractId = parseInt(prevContract?.contractId ?? 0) + 1;
 
+    const newAchievements = [tryUnlock(player, 'Market Maker')].filter(Boolean);
+
     player[resourceType] -= contractSize;
     await player.save();
 
     await ContractModel.create({ contractId: nextContractId, userId, price, resourceType, contractSize });
 
-    return { ok: true, message: `Contract (#${nextContractId}) posted: ${contractSize} ${resourceType} for sale at $${price} each` };
+    return { ok: true, message: `Contract (#${nextContractId}) posted: ${contractSize} ${resourceType} for sale at $${price} each` + formatUnlocked(newAchievements) };
 }
 
 /**
@@ -110,6 +115,8 @@ async function buyContract(buyerPlayer, buyerUserId, contractId, buyAmount, Cont
     buyerPlayer[contract.resourceType] += buyAmount;
     contract.contractSize -= buyAmount;
 
+    const newAchievements = [tryUnlock(buyerPlayer, 'Trader')].filter(Boolean);
+
     // Use updateOne to avoid loading and overwriting seller's full document
     await PlayerModel.updateOne({ userId: contract.userId }, { $inc: { money: buyAmount * contract.price } });
     await buyerPlayer.save();
@@ -120,7 +127,7 @@ async function buyContract(buyerPlayer, buyerUserId, contractId, buyAmount, Cont
         await contract.save();
     }
 
-    return { ok: true, message: `<@${buyerUserId}> bought ${buyAmount} ${contract.resourceType} from <@${contract.userId}> from contract #${contractId}` };
+    return { ok: true, message: `<@${buyerUserId}> bought ${buyAmount} ${contract.resourceType} from <@${contract.userId}> from contract #${contractId}` + formatUnlocked(newAchievements) };
 }
 
 /**

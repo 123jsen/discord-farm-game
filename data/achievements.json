@@ -1,0 +1,17 @@
+[
+    { "name": "First Harvest",   "icon": "🌱", "description": "Harvest your first crop." },
+    { "name": "Green Thumb",     "icon": "🪴", "description": "Harvest 100 crops total." },
+    { "name": "Mass Producer",   "icon": "🏭", "description": "Harvest 5,000 crops total." },
+    { "name": "Mad Scientist",   "icon": "🧪", "description": "Harvest a Mutant Strain crop." },
+    { "name": "Getting Started", "icon": "💰", "description": "Accumulate $1,000." },
+    { "name": "Millionaire",     "icon": "🤑", "description": "Accumulate $1,000,000." },
+    { "name": "Builder",         "icon": "🔨", "description": "Construct your first building." },
+    { "name": "Architect",       "icon": "🏗️", "description": "Fill all building slots." },
+    { "name": "Specialist",      "icon": "⭐", "description": "Have 3 of the same building type." },
+    { "name": "Market Maker",    "icon": "📋", "description": "Post your first contract." },
+    { "name": "Trader",          "icon": "🤝", "description": "Buy from a contract." },
+    { "name": "Generous",        "icon": "🎁", "description": "Give resources to another player." },
+    { "name": "Full Farm",       "icon": "🗺️", "description": "Upgrade your farm to maximum width." },
+    { "name": "The Reset",       "icon": "🔄", "description": "Prestige for the first time." },
+    { "name": "Veteran",         "icon": "🏆", "description": "Prestige 5 times." }
+]

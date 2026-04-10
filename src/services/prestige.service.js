@@ -3,6 +3,7 @@
 const { checkEnoughMoney } = require('../player.js');
 const Player = require('../models/player.model.js');
 const { DEFAULT_MONEY } = require('../../data/config.json');
+const { tryUnlock } = require('./achievement.service.js');
 
 const RACE_DURATION_MS    = 60 * 60 * 1000; // 1 hour
 const COOLDOWN_DURATION_MS = 60 * 60 * 1000; // 1 hour cooldown after failure
@@ -68,6 +69,8 @@ async function resolveRaceSuccess(server) {
     const initiator = await Player.findOne({ userId: server.race.initiatorId });
     if (initiator) {
         initiator.prestigeCount += 1;
+        tryUnlock(initiator, 'The Reset');
+        if (initiator.prestigeCount >= 5) tryUnlock(initiator, 'Veteran');
         await resetPlayer(initiator);
     }
 

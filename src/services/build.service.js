@@ -1,6 +1,7 @@
 // Build service — handles build, destroy, checkBuild logic
 
 const { checkEnoughMoney } = require('../player.js');
+const { tryUnlock, formatUnlocked } = require('./achievement.service.js');
 
 /**
  * Build a new building or upgrade an existing one at a slot.
@@ -42,9 +43,18 @@ async function build(player, row, col, buildTarget, buildingsList, PlayerModel) 
         player.metal -= buildLevel.cost[3];
 
         PlayerModel.calculateBuildingsEffect(player);
+
+        const newBuildAchievements = [];
+        newBuildAchievements.push(...[tryUnlock(player, 'Builder')].filter(Boolean));
+        const filledSlots = player.building.slice(0, player.buildingSlots).filter(b => b.name !== 'Empty').length;
+        if (filledSlots === player.buildingSlots)   newBuildAchievements.push(...[tryUnlock(player, 'Architect')].filter(Boolean));
+        const nameCounts = {};
+        player.building.slice(0, player.buildingSlots).forEach(b => { if (b.name !== 'Empty') nameCounts[b.name] = (nameCounts[b.name] || 0) + 1; });
+        if (Object.values(nameCounts).some(c => c >= 3)) newBuildAchievements.push(...[tryUnlock(player, 'Specialist')].filter(Boolean));
+
         await player.save();
 
-        return { ok: true, message: `Spent $${buildLevel.cost[0]}, ${buildLevel.cost[1]} wood, ${buildLevel.cost[2]} stone and ${buildLevel.cost[3]} metal to build ${category.name}` };
+        return { ok: true, message: `Spent $${buildLevel.cost[0]}, ${buildLevel.cost[1]} wood, ${buildLevel.cost[2]} stone and ${buildLevel.cost[3]} metal to build ${category.name}` + formatUnlocked(newBuildAchievements) };
     }
 
     // Upgrade existing building
@@ -74,9 +84,17 @@ async function build(player, row, col, buildTarget, buildingsList, PlayerModel) 
     player.metal -= nextTier.cost[3];
 
     PlayerModel.calculateBuildingsEffect(player);
+
+    const newUpgradeAchievements = [];
+    const filledSlotsUpg = player.building.slice(0, player.buildingSlots).filter(b => b.name !== 'Empty').length;
+    if (filledSlotsUpg === player.buildingSlots) newUpgradeAchievements.push(...[tryUnlock(player, 'Architect')].filter(Boolean));
+    const nameCountsUpg = {};
+    player.building.slice(0, player.buildingSlots).forEach(b => { if (b.name !== 'Empty') nameCountsUpg[b.name] = (nameCountsUpg[b.name] || 0) + 1; });
+    if (Object.values(nameCountsUpg).some(c => c >= 3)) newUpgradeAchievements.push(...[tryUnlock(player, 'Specialist')].filter(Boolean));
+
     await player.save();
 
-    return { ok: true, message: `You spent $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${category.name} to level ${currentBuilding.level + 1}` };
+    return { ok: true, message: `You spent $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${category.name} to level ${currentBuilding.level + 1}` + formatUnlocked(newUpgradeAchievements) };
 }
 
 /**

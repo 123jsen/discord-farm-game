@@ -1,6 +1,7 @@
 // Farm service — handles plant, plantAll, harvest, checkCrop logic
 
 const { resolveRaceSuccess } = require('./prestige.service.js');
+const { tryUnlock, formatUnlocked } = require('./achievement.service.js');
 
 /**
  * Plant a crop at a specific position.
@@ -87,14 +88,17 @@ async function harvest(player, cropList, server = null) {
     const current = Date.now();
     let harvestGain = 0;
     let cropCount = 0;
+    let harvestedMutant = false;
     const multiplier = Math.pow(1.15, player.prestigeCount || 0);
 
     for (let index = 0; index < player.farmArea; index++) {
         if (player.farm[index].name === 'Empty') continue;
 
-        const { worth, growthTime } = cropList.find(crop => crop.name === player.farm[index].name);
+        const crop = cropList.find(c => c.name === player.farm[index].name);
+        const { worth, growthTime } = crop;
 
         if (player.farm[index].timer.getTime() + growthTime < current) {
+            if (crop.name === 'Mutant Strain') harvestedMutant = true;
             player.farm[index] = { name: 'Empty', timer: new Date() };
             harvestGain += Math.round(worth * multiplier);
             cropCount++;
@@ -106,6 +110,16 @@ async function harvest(player, cropList, server = null) {
     }
 
     player.money += harvestGain;
+    player.totalCropsHarvested = (player.totalCropsHarvested || 0) + cropCount;
+
+    const newAchievements = [];
+    if (cropCount > 0)                              newAchievements.push(...[tryUnlock(player, 'First Harvest')].filter(Boolean));
+    if (player.totalCropsHarvested >= 100)          newAchievements.push(...[tryUnlock(player, 'Green Thumb')].filter(Boolean));
+    if (player.totalCropsHarvested >= 5000)         newAchievements.push(...[tryUnlock(player, 'Mass Producer')].filter(Boolean));
+    if (harvestedMutant)                            newAchievements.push(...[tryUnlock(player, 'Mad Scientist')].filter(Boolean));
+    if (player.money >= 1000)                       newAchievements.push(...[tryUnlock(player, 'Getting Started')].filter(Boolean));
+    if (player.money >= 1000000)                    newAchievements.push(...[tryUnlock(player, 'Millionaire')].filter(Boolean));
+
     await player.save();
 
     // Contribute to active race if one is running
@@ -120,7 +134,7 @@ async function harvest(player, cropList, server = null) {
         }
     }
 
-    return { ok: true, message: `Harvested $${harvestGain}!` };
+    return { ok: true, message: `Harvested $${harvestGain}!` + formatUnlocked(newAchievements) };
 }
 
 /**

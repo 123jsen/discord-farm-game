@@ -43,9 +43,18 @@ module.exports = {
             crops.forEach(crop => {
                 if (crop.name === 'Empty') return;
 
+                const totalSecs = crop.growthTime / 1000;
+                const hrs  = Math.floor(totalSecs / 3600);
+                const mins = Math.floor((totalSecs % 3600) / 60);
+                const secs = totalSecs % 60;
+                const timeStr = [
+                    hrs  > 0 ? `${hrs}h`  : null,
+                    mins > 0 ? `${mins}m` : null,
+                    secs > 0 ? `${secs}s` : null,
+                ].filter(Boolean).join(' ');
                 fields.push({
                     name: `${crop.image} ${crop.name}`,
-                    value: `Cost: $${crop.cost} Value: $${crop.worth}`
+                    value: `${crop.description}\nCost: $${crop.cost} | Value: $${crop.worth} | Time: ${timeStr}`
                 })
             })
         }

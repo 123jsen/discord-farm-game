@@ -4,41 +4,47 @@
         "image": "🟫",
         "cost": 0,
         "worth": 0,
-        "growthTime": 0
+        "growthTime": 0,
+        "description": "Just dirt."
     },
     {
         "name": "Carrot",
         "image": "🥕",
         "cost": 20,
         "worth": 28,
-        "growthTime": 40000
+        "growthTime": 40000,
+        "description": "A humble root vegetable. Every farm starts here."
     },
     {
         "name": "Mushroom",
         "image": "🍄",
         "cost": 25,
         "worth": 40,
-        "growthTime": 45000
+        "growthTime": 45000,
+        "description": "Grows in the dark, just like your ambitions."
     },
     {
         "name": "Potato",
         "image": "🥔",
         "cost": 42,
         "worth": 75,
-        "growthTime": 50000
+        "growthTime": 50000,
+        "description": "Reliable. Boring. Profitable."
     },
     {
         "name": "Corn",
         "image": "🌽",
         "cost": 70,
         "worth": 125,
-        "growthTime": 90000
+        "growthTime": 90000,
+        "description": "Takes a while, but the fields look glorious."
     },
     {
         "name": "Rice",
         "image": "🌾",
         "cost": 150,
         "worth": 270,
-        "growthTime": 90000
+        "growthTime": 90000,
+        "description": "The backbone of civilisations. And your bank account."
     }
 ]

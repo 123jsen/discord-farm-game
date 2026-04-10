@@ -28,6 +28,7 @@ module.exports = {
                 { name: '/destroy', value: 'Destroy a building and get some of its price back' },
                 { name: '/prestige', value: 'Initiate a server-wide crop harvest race. Complete it to reset your farm and earn a permanent 1.15x income multiplier (stacks each prestige)' },
                 { name: '/race', value: 'Check the current prestige race progress and time remaining' },
+                { name: '/achievements', value: 'View your unlocked achievements and what you still need to earn' },
                 { name: '/setchannel', value: '(Admin) Set the channel where welcome messages are sent. Defaults to #dodos-weed-farm' })
 
         await interaction.reply({ embeds: [helpEmbed], ephemeral: true });

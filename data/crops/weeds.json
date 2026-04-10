@@ -4,41 +4,55 @@
         "image": "🪴",
         "cost": 240,
         "worth": 480,
-        "growthTime": 900000
+        "growthTime": 900000,
+        "description": "Nothing special. Just some home-grown goodness."
     },
     {
         "name": "Diesel",
         "image": "⛽",
         "cost": 800,
         "worth": 1550,
-        "growthTime": 1260000
+        "growthTime": 1260000,
+        "description": "Smells like profit."
     },
     {
         "name": "Labmade",
         "image": "⚗️",
         "cost": 1350,
         "worth": 2770,
-        "growthTime": 1500000
+        "growthTime": 1500000,
+        "description": "Engineered in a garage lab. Probably safe."
     },
     {
         "name": "Girl Scout Cookies",
         "image": "🍪",
         "cost": 2300,
         "worth": 3910,
-        "growthTime": 1600000
+        "growthTime": 1600000,
+        "description": "A classic strain with an iconic name. Handle with care."
     },
     {
         "name": "Super Silver Haze",
         "image": "🌫️",
         "cost": 3400,
         "worth": 6450,
-        "growthTime": 2550000
+        "growthTime": 2550000,
+        "description": "The crown jewel of the operation. Takes ages, pays like royalty."
     },
     {
         "name": "Strawberry Bliss",
         "image": "🍓",
         "cost": 3400,
         "worth": 5610,
-        "growthTime": 1700000
+        "growthTime": 1700000,
+        "description": "Smells like summer. Sells like winter."
+    },
+    {
+        "name": "Mutant Strain",
+        "image": "🧪",
+        "cost": 52000,
+        "worth": 4800,
+        "growthTime": 1000,
+        "description": "A lab experiment gone wrong. Worthless at base — but prestige changes everything."
     }
 ]

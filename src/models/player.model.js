@@ -33,6 +33,13 @@ const PlayerSchema = Schema({
     // Prestige
     prestigeCount: { type: Number, default: 0 },
 
+    // Achievements (preserved through prestige)
+    achievements: [{
+        name: { type: String },
+        unlockedAt: { type: Date }
+    }],
+    totalCropsHarvested: { type: Number, default: 0 },
+
     // Building Detail
     // Building Width is always 2
     buildingSlots: { type: Number, required: true, default: 4 },

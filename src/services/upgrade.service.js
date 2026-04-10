@@ -1,6 +1,7 @@
 // Upgrade service — handles farm width, building slots upgrades
 
 const { checkEnoughMoney } = require('../player.js');
+const { tryUnlock, formatUnlocked } = require('./achievement.service.js');
 
 /**
  * Upgrade a farm or tool stat.
@@ -37,9 +38,14 @@ async function upgrade(player, upgradeTarget, upgradesList) {
         player.buildingSlots++;
     }
 
+    const newAchievements = [];
+    if (upgradeTarget === 'farmWidth' && player.farmWidth === 7) {
+        newAchievements.push(...[tryUnlock(player, 'Full Farm')].filter(Boolean));
+    }
+
     await player.save();
 
-    return { ok: true, message: `Spent $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${category.name} to tier ${nextTier.level}` };
+    return { ok: true, message: `Spent $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${category.name} to tier ${nextTier.level}` + formatUnlocked(newAchievements) };
 }
 
 module.exports = { upgrade };
