@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder } = require('discord.js');
 const cropList = require('../../data/crops/export.js');
 
 const cropChoices = [];

@@ -1,6 +1,5 @@
 const fs = require('node:fs');
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
+const { REST, Routes } = require('discord.js');
 require('dotenv').config();
 
 const commands = [];
@@ -11,7 +10,7 @@ for (const file of commandFiles) {
 	commands.push(command.data.toJSON());
 	console.log(`Registered command /${command.data.name}`);
 }
-const rest = new REST({ version: '9' }).setToken(process.env.CLIENT_TOKEN);
+const rest = new REST({ version: '10' }).setToken(process.env.CLIENT_TOKEN);
 
 if (process.env.GUILD_ID) {
 	console.log('Guild ID found');

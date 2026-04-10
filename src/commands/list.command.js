@@ -1,5 +1,4 @@
-const { MessageEmbed } = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const Contract = require('../models/contract.model.js');
 const buildings = require('../../data/buildings/export.js');
 const crops = require('../../data/crops/export.js');
@@ -92,7 +91,7 @@ module.exports = {
             })
         }
 
-        const listEmbed = new MessageEmbed()
+        const listEmbed = new EmbedBuilder()
             .setColor('#a84232')
             .setTitle(title)
             .addFields(...fields);

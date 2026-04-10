@@ -9,12 +9,12 @@
   "repository": "git@github.com:SenYanHo/discord-farm-game.git",
   "author": "SenYanHo <123sendodo@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=16.11.0"
+  },
   "dependencies": {
-    "@discordjs/builders": "^0.13.0",
-    "@discordjs/rest": "^0.4.1",
-    "discord-api-types": "^0.32.0",
-    "discord.js": "^13.6.0",
-    "dotenv": "^16.0.0",
-    "mongoose": "^6.3.1"
+    "discord.js": "^14.16.0",
+    "dotenv": "^16.4.7",
+    "mongoose": "^8.9.0"
   }
 }

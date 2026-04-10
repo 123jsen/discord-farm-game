@@ -1,7 +1,6 @@
 // TODO: Show player names in leaderboard
 
-const { MessageEmbed } = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const Player = require('../models/player.model.js');
 
 module.exports = {
@@ -22,7 +21,7 @@ module.exports = {
             embedField.push({ name: `${i + 1}. ${players[i].farmName}`, value: `$${Math.round(players[i].money * 100) / 100}` });
         }
 
-        const boardEmbed = new MessageEmbed()
+        const boardEmbed = new EmbedBuilder()
             .setColor('#a84232')
             .setTitle('Leaderboard')
             .addFields(

@@ -1,6 +1,6 @@
 // Imports from libraries
 const fs = require('node:fs');
-const { Client, Collection, Intents } = require('discord.js');
+const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const mongoose = require("mongoose");
 require('dotenv').config();
 
@@ -19,7 +19,7 @@ db.once("open", () => {
 	console.log("connection to mongodb success");
 
 	// Create a new client instance
-	const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+	const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 	client.commands = new Collection();
 	// fs uses absolute path
@@ -40,7 +40,7 @@ db.once("open", () => {
 	});
 
 	client.on('interactionCreate', async interaction => {
-		if (!interaction.isCommand()) return;
+		if (!interaction.isChatInputCommand()) return;
 
 		const command = client.commands.get(interaction.commandName);
 

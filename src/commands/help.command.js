@@ -1,5 +1,4 @@
-const { MessageEmbed } = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const { version } = require('../../package.json');
 
 module.exports = {
@@ -7,7 +6,7 @@ module.exports = {
         .setName('help')
         .setDescription('Instructions on the Game'),
     async execute(interaction, player) {
-        const helpEmbed = new MessageEmbed()
+        const helpEmbed = new EmbedBuilder()
             .setColor('#0099ff')
             .setTitle(`Dodo's Weed Farm V ${version}`)
             .setURL('https://github.com/SenYanHo/discord-farm-game')

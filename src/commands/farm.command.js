@@ -1,5 +1,4 @@
-const { MessageEmbed } = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const crops = require('../../data/crops/export.js');
 const buildings = require('../../data/buildings/export.js');
 
@@ -32,7 +31,7 @@ module.exports = {
             buildStr = buildStr.concat(image);
         }
 
-        const farmEmbed = new MessageEmbed()
+        const farmEmbed = new EmbedBuilder()
             .setColor('#a84232')
             .setTitle(player.farmName)
             .addFields(
