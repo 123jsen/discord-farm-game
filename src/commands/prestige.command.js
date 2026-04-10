@@ -1,14 +1,13 @@
 const { SlashCommandBuilder } = require('discord.js');
-const crops = require('../../data/crops/export.js');
-const farmService = require('../services/farm.service.js');
+const prestigeService = require('../services/prestige.service.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('harvest')
-        .setDescription('Harvest all mature crops'),
+        .setName('prestige')
+        .setDescription('Initiate a server-wide prestige race to reset your farm for a permanent income multiplier'),
 
     async execute(interaction, player, server) {
-        const result = await farmService.harvest(player, crops, server);
+        const result = await prestigeService.initiateRace(player, server);
         if (!result.ok) return interaction.reply({ content: result.message, ephemeral: true });
         await interaction.reply(result.message);
     },

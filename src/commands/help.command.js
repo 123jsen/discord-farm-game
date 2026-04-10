@@ -25,7 +25,9 @@ module.exports = {
                 { name: '/upgrade', value: 'Upgrade your farm' },
                 { name: '/build', value: 'Build a building at a spot' },
                 { name: '/checkbuild', value: 'Check what building is built there' },
-                { name: '/destroy', value: 'Destroy a building and get some of its price back' })
+                { name: '/destroy', value: 'Destroy a building and get some of its price back' },
+                { name: '/prestige', value: 'Initiate a server-wide crop harvest race. Complete it to reset your farm and earn a permanent 1.15x income multiplier (stacks each prestige)' },
+                { name: '/race', value: 'Check the current prestige race progress and time remaining' })
 
         await interaction.reply({ embeds: [helpEmbed], ephemeral: true });
     },

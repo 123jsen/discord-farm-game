@@ -5,8 +5,9 @@ const mongoose = require("mongoose");
 require('dotenv').config();
 
 // Imports from project files
-const { findOrCreatePlayer } = require('./player.js');
+const { findOrCreatePlayer, findOrCreateServer } = require('./player.js');
 const Player = require('./models/player.model.js');
+const { checkAndResolveExpiredRace } = require('./services/prestige.service.js');
 
 const dbUri = process.env.MONGODB_URI;
 mongoose.connect(dbUri);
@@ -50,11 +51,13 @@ db.once("open", () => {
 
 		// Middleware
 		const player = await findOrCreatePlayer(interaction);
+		const server = await findOrCreateServer(interaction.guildId);
 		await Player.updateProduction(player);
+		await checkAndResolveExpiredRace(server);
 
 		// Executing commands
 		try {
-			await command.execute(interaction, player);
+			await command.execute(interaction, player, server);
 		} catch (error) {
 			console.error(error);
 			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });

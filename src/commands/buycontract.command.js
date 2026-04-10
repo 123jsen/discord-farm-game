@@ -7,14 +7,14 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('buycontract')
         .setDescription('Buy resources from a contract')
-        .addNumberOption(option =>
+        .addIntegerOption(option =>
             option.setName('contractnumber').setDescription('ID of the contract, use `/list` to findout more').setRequired(true))
-        .addNumberOption(option =>
+        .addIntegerOption(option =>
             option.setName('buyamount').setDescription('How much resources to buy').setRequired(true)),
 
     async execute(interaction, player) {
-        const contractId = interaction.options.getNumber('contractnumber');
-        const buyAmount = interaction.options.getNumber('buyamount');
+        const contractId = interaction.options.getInteger('contractnumber');
+        const buyAmount = interaction.options.getInteger('buyamount');
         const buyerUserId = interaction.user.id;
 
         const result = await tradeService.buyContract(player, buyerUserId, contractId, buyAmount, Contract, Player);

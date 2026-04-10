@@ -6,11 +6,11 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('deletecontract')
         .setDescription('Delete your contract')
-        .addNumberOption(option =>
+        .addIntegerOption(option =>
             option.setName('contractnumber').setDescription('ID of the contract, use `/list` to findout more').setRequired(true)),
 
     async execute(interaction, player) {
-        const contractId = interaction.options.getNumber('contractnumber');
+        const contractId = interaction.options.getInteger('contractnumber');
         const userId = interaction.user.id;
 
         const result = await tradeService.deleteContract(player, userId, contractId, Contract);

@@ -78,11 +78,14 @@ async function plantAll(player, seedName, cropList) {
  * Harvest all mature crops.
  * @param {object} player   - Mongoose player document
  * @param {Array}  cropList - from data/crops/export.js
+ * @param {object} [server] - Mongoose server document (optional, for race tracking)
  * @returns {{ ok: boolean, message: string }}
  */
-async function harvest(player, cropList) {
+async function harvest(player, cropList, server = null) {
     const current = Date.now();
     let harvestGain = 0;
+    let cropCount = 0;
+    const multiplier = Math.pow(1.15, player.prestigeCount || 0);
 
     for (let index = 0; index < player.farmArea; index++) {
         if (player.farm[index].name === 'Empty') continue;
@@ -91,7 +94,8 @@ async function harvest(player, cropList) {
 
         if (player.farm[index].timer.getTime() + growthTime < current) {
             player.farm[index] = { name: 'Empty', timer: new Date() };
-            harvestGain += worth;
+            harvestGain += Math.round(worth * multiplier);
+            cropCount++;
         }
     }
 
@@ -101,6 +105,12 @@ async function harvest(player, cropList) {
 
     player.money += harvestGain;
     await player.save();
+
+    // Contribute to active race if one is running
+    if (server && server.race && server.race.active) {
+        server.race.cropsHarvested += cropCount;
+        await server.save();
+    }
 
     return { ok: true, message: `Harvested $${harvestGain}!` };
 }

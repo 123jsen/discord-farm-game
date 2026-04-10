@@ -3,6 +3,7 @@
 const { DEFAULT_MONEY } = require('../data/config.json');
 
 const Player = require("./models/player.model.js");
+const Server = require("./models/server.model.js");
 
 // Cost array is [Money, Wood, Stone, Metal]
 // Player should be object after exec()
@@ -38,4 +39,13 @@ async function findOrCreatePlayer(interaction) {
     return player;
 }
 
-module.exports = { checkEnoughMoney, findOrCreatePlayer };
+async function findOrCreateServer(guildId) {
+    let server = await Server.findOne({ guildId });
+    if (!server) {
+        server = await Server.create({ guildId });
+        console.log(`Created server record for guild ${guildId}`);
+    }
+    return server;
+}
+
+module.exports = { checkEnoughMoney, findOrCreatePlayer, findOrCreateServer };

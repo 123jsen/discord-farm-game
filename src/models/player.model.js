@@ -30,6 +30,9 @@ const PlayerSchema = Schema({
         timer: { type: Date, default: new Date }
     }],
 
+    // Prestige
+    prestigeCount: { type: Number, default: 0 },
+
     // Building Detail
     // Building Width is always 2
     buildingSlots: { type: Number, required: true, default: 4 },

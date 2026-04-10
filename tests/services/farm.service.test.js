@@ -166,6 +166,69 @@ describe('harvest', () => {
     });
 });
 
+// ─── harvest — prestige multiplier & race tracking ────────────────────────────
+
+describe('harvest — prestige multiplier', () => {
+    test('applies 1.15x multiplier for 1 prestige and rounds down', async () => {
+        const player = makePlayer({ money: 0, prestigeCount: 1 });
+        const pastDate = new Date(Date.now() - 99999);
+        player.farm[0] = { name: 'Carrot', timer: pastDate }; // worth $28
+        await harvest(player, cropList);
+        expect(player.money).toBe(Math.round(28 * 1.15)); // 32
+    });
+
+    test('stacks multiplier multiplicatively across multiple prestiges', async () => {
+        const player = makePlayer({ money: 0, prestigeCount: 3 });
+        const pastDate = new Date(Date.now() - 99999);
+        player.farm[0] = { name: 'Carrot', timer: pastDate };
+        await harvest(player, cropList);
+        expect(player.money).toBe(Math.round(28 * Math.pow(1.15, 3)));
+    });
+
+    test('no multiplier when prestigeCount is 0', async () => {
+        const player = makePlayer({ money: 0, prestigeCount: 0 });
+        const pastDate = new Date(Date.now() - 99999);
+        player.farm[0] = { name: 'Carrot', timer: pastDate };
+        await harvest(player, cropList);
+        expect(player.money).toBe(28);
+    });
+});
+
+describe('harvest — race tracking', () => {
+    function makeActiveServer(cropsHarvested = 0) {
+        return {
+            race: { active: true, cropsHarvested },
+            save: jest.fn().mockResolvedValue(true)
+        };
+    }
+
+    test('increments server race crop count on harvest', async () => {
+        const player = makePlayer({ money: 0 });
+        const pastDate = new Date(Date.now() - 99999);
+        player.farm[0] = { name: 'Carrot', timer: pastDate };
+        player.farm[1] = { name: 'Mushroom', timer: pastDate };
+        const server = makeActiveServer(10);
+        await harvest(player, cropList, server);
+        expect(server.race.cropsHarvested).toBe(12); // 10 + 2 crops
+        expect(server.save).toHaveBeenCalledTimes(1);
+    });
+
+    test('does not update server when no crops are harvested', async () => {
+        const player = makePlayer({ money: 0 });
+        const server = makeActiveServer(10);
+        await harvest(player, cropList, server); // all empty, nothing harvested
+        expect(server.save).not.toHaveBeenCalled();
+    });
+
+    test('works fine without server argument (no race active)', async () => {
+        const player = makePlayer({ money: 0 });
+        const pastDate = new Date(Date.now() - 99999);
+        player.farm[0] = { name: 'Carrot', timer: pastDate };
+        const result = await harvest(player, cropList); // no server passed
+        expect(result.ok).toBe(true);
+    });
+});
+
 // ─── checkCrop ────────────────────────────────────────────────────────────────
 
 describe('checkCrop', () => {
