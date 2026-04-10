@@ -1,144 +1,33 @@
 const { SlashCommandBuilder } = require('discord.js');
 const Player = require('../models/player.model.js');
-
 const buildings = require('../../data/buildings/export.js');
-const { checkEnoughMoney } = require('../player.js');
+const buildService = require('../services/build.service.js');
+
 const choices = [];
 buildings.forEach(build => {
     if (build.name !== 'Empty')
-        choices.push({
-            name: `${build.image} ${build.name}`,
-            value: build.target
-        });
+        choices.push({ name: `${build.image} ${build.name}`, value: build.target });
 })
-
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('build')
         .setDescription('Build a new building')
         .addIntegerOption(option =>
-            option
-                .setName('row')
-                .setDescription('Build building at row.')
-                .setRequired(true))
+            option.setName('row').setDescription('Build building at row.').setRequired(true))
         .addIntegerOption(option =>
-            option
-                .setName('col')
-                .setDescription('Build building at column.')
-                .setRequired(true))
+            option.setName('col').setDescription('Build building at column.').setRequired(true))
         .addStringOption(option =>
-            option
-                .setName('type')
-                .setDescription('Building type')
-                .setRequired(true)
+            option.setName('type').setDescription('Building type').setRequired(true)
                 .addChoices(...choices)),
 
     async execute(interaction, player) {
-        const userId = interaction.user.id;
-
         const row = interaction.options.getInteger('row') - 1;
         const col = interaction.options.getInteger('col') - 1;
+        const buildTarget = interaction.options.getString('type');
 
-        const index = row * player.buildingWidth + col;
-
-        if (col >= player.buildingWidth || index >= player.buildingSlots) {
-            await interaction.reply({ content: 'Coordinates are out of bound', ephemeral: true });
-            return;
-        }
-
-        const buildOption = interaction.options.getString('type');
-        const category = buildings.find(build => (build.target === buildOption));
-
-        const currentBuilding = player.building[index];
-
-        // Build new building if land is empty
-        if (currentBuilding.name === 'Empty') {
-            const buildLevel = category.levels[0];
-            if (!checkEnoughMoney(buildLevel.cost, player)) {
-                await interaction.reply({ content: `You need $${buildLevel.cost[0]}, ${buildLevel.cost[1]} wood, ${buildLevel.cost[2]} stone and ${buildLevel.cost[3]} metal to build ${category.name}`, ephemeral: true });
-                return;
-            }
-
-            if (buildOption === 'farmHeight') {
-                player.farmHeight++;
-
-                // If farmWidth increases, then there are farmHeight more plots.
-                const extraFarm = Array(player.farmWidth).fill({
-                    name: 'Empty',
-                    timer: new Date
-                });
-    
-                player.farm.push(...extraFarm);
-            }
-
-            player.building[index] = {
-                name: category.name,
-                level: 1
-            };
-            player.money -= buildLevel.cost[0];
-            player.wood -= buildLevel.cost[1];
-            player.stone -= buildLevel.cost[2];
-            player.metal -= buildLevel.cost[3];
-
-            // Update Player Production Capacities
-            Player.calculateBuildingsEffect(player);
-
-            await player.save();
-
-            await interaction.reply(`Spent $${buildLevel.cost[0]}, ${buildLevel.cost[1]} wood, ${buildLevel.cost[2]} stone and ${buildLevel.cost[3]} metal to build ${category.name}`);
-        }
-        // Check for match and upgrade existing building
-        else {
-
-            if (currentBuilding.name != category.name) {
-                await interaction.reply({ content: `You cannot build ${category.name} as ${currentBuilding.name} is already here`, ephemeral: true });
-                return;
-            }
-
-            // If current level is 1, then nextTier is levels[1]
-            const nextTier = category.levels[currentBuilding.level];
-
-            // No next tier
-            if (!nextTier) {
-                await interaction.reply({ content: `You cannot upgrade ${category.name}`, ephemeral: true });
-                return;
-            }
-
-            if (!checkEnoughMoney(nextTier.cost, player)) {
-                await interaction.reply({ content: `You need $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${category.name} to level ${currentBuilding.level + 1}`, ephemeral: true });
-                return;
-            }
-
-            // Actually upgrading
-            player.building[index] = {
-                name: category.name,
-                level: currentBuilding.level + 1
-            };
-
-            player.money -= nextTier.cost[0];
-            player.wood -= nextTier.cost[1];
-            player.stone -= nextTier.cost[2];
-            player.metal -= nextTier.cost[3];
-
-            if (buildOption === 'farmHeight') {
-                player.farmHeight++;
-
-                // If farmWidth increases, then there are farmHeight more plots.
-                const extraFarm = Array(player.farmWidth).fill({
-                    name: 'Empty',
-                    timer: new Date
-                });
-    
-                player.farm.push(...extraFarm);
-            }
-
-            // Update Player Production Capacities
-            Player.calculateBuildingsEffect(player);
-
-            player.save();
-
-            await interaction.reply(`You spent $${nextTier.cost[0]}, ${nextTier.cost[1]} wood, ${nextTier.cost[2]} stone and ${nextTier.cost[3]} metal to upgrade ${category.name} to level ${currentBuilding.level + 1}`);
-        }
+        const result = await buildService.build(player, row, col, buildTarget, buildings, Player);
+        if (!result.ok) return interaction.reply({ content: result.message, ephemeral: true });
+        await interaction.reply(result.message);
     },
 };

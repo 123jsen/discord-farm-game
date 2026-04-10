@@ -4,7 +4,8 @@
   "main": "src/app.js",
   "scripts": {
     "start": "node .",
-    "commands": "node src/initialization/deploy-commands.js"
+    "commands": "node src/initialization/deploy-commands.js",
+    "test": "jest"
   },
   "repository": "git@github.com:SenYanHo/discord-farm-game.git",
   "author": "SenYanHo <123sendodo@gmail.com>",
@@ -16,5 +17,8 @@
     "discord.js": "^14.16.0",
     "dotenv": "^16.4.7",
     "mongoose": "^8.9.0"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0"
   }
 }
