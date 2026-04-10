@@ -10,18 +10,18 @@ for (const file of commandFiles) {
 	commands.push(command.data.toJSON());
 	console.log(`Registered command /${command.data.name}`);
 }
-const rest = new REST({ version: '10' }).setToken(process.env.CLIENT_TOKEN);
+const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_CLIENT_TOKEN);
 
-if (process.env.GUILD_ID) {
+if (process.env.DISCORD_GUILD_ID) {
 	console.log('Guild ID found');
-	rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID), { body: commands })
+	rest.put(Routes.applicationGuildCommands(process.env.DISCORD_APP_ID, process.env.DISCORD_GUILD_ID), { body: commands })
 		.then(() => console.log('Successfully registered application commands for guild.'))
 		.catch(console.error);
 }
-	
+
 else {
 	console.log('Guild ID not found');
-	rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: commands })
+	rest.put(Routes.applicationCommands(process.env.DISCORD_APP_ID), { body: commands })
 		.then(() => console.log('Successfully registered application commands globally (updates may take an hour).'))
 		.catch(console.error);
 }

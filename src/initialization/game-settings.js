@@ -29,7 +29,7 @@ const Player = require('../models/player.model.js');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const dbUri = process.env.MONGODB_URI;
+const dbUri = process.env.DISCORD_MONGODB_URI;
 mongoose.connect(dbUri);
 
 const db = mongoose.connection;

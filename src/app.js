@@ -9,7 +9,7 @@ const { findOrCreatePlayer, findOrCreateServer } = require('./player.js');
 const Player = require('./models/player.model.js');
 const { checkAndResolveExpiredRace } = require('./services/prestige.service.js');
 
-const dbUri = process.env.MONGODB_URI;
+const dbUri = process.env.DISCORD_MONGODB_URI;
 mongoose.connect(dbUri);
 
 const db = mongoose.connection;
@@ -77,5 +77,5 @@ db.once("open", () => {
 
 
 	// Login to Discord with your client's token
-	client.login(process.env.CLIENT_TOKEN);
+	client.login(process.env.DISCORD_CLIENT_TOKEN);
 });
