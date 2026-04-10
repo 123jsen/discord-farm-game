@@ -49,6 +49,10 @@ async function give(senderPlayer, receiverPlayer, resourceType, amount, senderUs
  * @returns {{ ok: boolean, message: string }}
  */
 async function makeContract(player, userId, resourceType, price, contractSize, ContractModel) {
+    if (contractSize <= 0) {
+        return { ok: false, message: 'Contract size must be a positive number' };
+    }
+
     if (player[resourceType] < contractSize) {
         return { ok: false, message: `You do not have enough ${resourceType} (You have ${Math.round(player[resourceType])})` };
     }
@@ -92,6 +96,10 @@ async function buyContract(buyerPlayer, buyerUserId, contractId, buyAmount, Cont
     // Clamp to contract size
     if (buyAmount > contract.contractSize) {
         buyAmount = contract.contractSize;
+    }
+
+    if (buyAmount <= 0) {
+        return { ok: false, message: 'Amount must be a positive number' };
     }
 
     if (buyerPlayer.money < buyAmount * contract.price) {
@@ -150,6 +158,10 @@ async function deleteContract(player, userId, contractId, ContractModel) {
  * @returns {{ ok: boolean, message: string }}
  */
 async function buyResource(player, amount, resourceType) {
+    if (amount <= 0) {
+        return { ok: false, message: 'Amount must be a positive number' };
+    }
+
     if (player.money < amount * GOLD_PER_RESOURCES) {
         return { ok: false, message: `You don't have enough money` };
     }
