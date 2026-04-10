@@ -18,7 +18,12 @@ module.exports = {
 
         let embedField = [];
         for (let i = 0; i < players.length; i++) {
-            embedField.push({ name: `${i + 1}. ${players[i].farmName}`, value: `$${Math.round(players[i].money * 100) / 100}` });
+            const p = players[i];
+            const achievementCount = p.achievements ? p.achievements.length : 0;
+            embedField.push({
+                name: `${i + 1}. ${p.farmName}`,
+                value: `$${Math.round(p.money * 100) / 100} · 🏆 ${achievementCount} achievement${achievementCount !== 1 ? 's' : ''}`
+            });
         }
 
         const boardEmbed = new EmbedBuilder()
