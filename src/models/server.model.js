@@ -9,6 +9,7 @@ const ServerSchema = Schema({
         initiatorId:     { type: String,  default: null },
         startTime:       { type: Date,    default: null },
         cropsHarvested:  { type: Number,  default: 0 },
+        targetCrops:     { type: Number,  default: 0 },
         cooldownUntil:   { type: Date,    default: null }
     }
 });

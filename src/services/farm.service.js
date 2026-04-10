@@ -1,5 +1,7 @@
 // Farm service — handles plant, plantAll, harvest, checkCrop logic
 
+const { resolveRaceSuccess } = require('./prestige.service.js');
+
 /**
  * Plant a crop at a specific position.
  * @param {object} player   - Mongoose player document
@@ -109,7 +111,13 @@ async function harvest(player, cropList, server = null) {
     // Contribute to active race if one is running
     if (server && server.race && server.race.active) {
         server.race.cropsHarvested += cropCount;
-        await server.save();
+
+        // End race early if target is reached
+        if (server.race.cropsHarvested >= server.race.targetCrops) {
+            await resolveRaceSuccess(server);
+        } else {
+            await server.save();
+        }
     }
 
     return { ok: true, message: `Harvested $${harvestGain}!` };

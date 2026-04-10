@@ -31,10 +31,16 @@ module.exports = {
             buildStr = buildStr.concat(image);
         }
 
+        const prestigeCount = player.prestigeCount || 0;
+        const prestigeValue = prestigeCount > 0
+            ? `${'💎'.repeat(Math.min(prestigeCount, 5))} Level ${prestigeCount} (×${Math.pow(1.15, prestigeCount).toFixed(2)} income)`
+            : 'None';
+
         const farmEmbed = new EmbedBuilder()
             .setColor('#a84232')
             .setTitle(player.farmName)
             .addFields(
+                { name: 'Prestige', value: prestigeValue },
                 { name: 'Money', value: `$${Math.round(player.money * 100) / 100}` },
                 { name: 'Resouces', value: resourceStr},
                 { name: 'Farm', value: farmStr },
