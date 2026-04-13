@@ -7,7 +7,7 @@ const { tryUnlock } = require('./achievement.service.js');
 
 const RACE_DURATION_MS    = 60 * 60 * 1000; // 1 hour
 const COOLDOWN_DURATION_MS = 60 * 60 * 1000; // 1 hour cooldown after failure
-const INITIATION_COST     = [500000, 100000, 100000, 100000]; // [money, wood, stone, metal]
+const INITIATION_COST     = [200000, 20000, 20000, 20000]; // [money, wood, stone, metal]
 const REFUND_PERCENT      = 0.3;
 const PRESTIGE_MULTIPLIER = 1.15;
 
