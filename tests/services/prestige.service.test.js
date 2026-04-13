@@ -10,6 +10,7 @@ const {
     REFUND_PERCENT,
 } = require('../../src/services/prestige.service.js');
 const { makePlayer } = require('../helpers.js');
+const { DEFAULT_MONEY } = require('../../data/config.json');
 
 jest.mock('../../src/models/player.model.js', () => ({
     findOne: jest.fn(),
@@ -174,7 +175,7 @@ describe('checkAndResolveExpiredRace', () => {
         await checkAndResolveExpiredRace(server);
 
         expect(initiator.prestigeCount).toBe(1);
-        expect(initiator.money).toBe(0);
+        expect(initiator.money).toBe(DEFAULT_MONEY);
         expect(initiator.farmWidth).toBe(3);
         expect(initiator.farm.length).toBe(9);
         expect(initiator.farm[0].name).toBe('Empty');
@@ -194,7 +195,7 @@ describe('resolveRaceSuccess', () => {
         await resolveRaceSuccess(server);
 
         expect(initiator.prestigeCount).toBe(2);
-        expect(initiator.money).toBe(0);
+        expect(initiator.money).toBe(DEFAULT_MONEY);
         expect(server.race.active).toBe(false);
         expect(server.race.cooldownUntil).toBeNull();
         expect(server.save).toHaveBeenCalledTimes(1);

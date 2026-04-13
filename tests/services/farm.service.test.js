@@ -114,6 +114,34 @@ describe('plantAll', () => {
         await plantAll(player, 'Carrot', cropList);
         expect(player.save).toHaveBeenCalledTimes(1);
     });
+
+    test('plants all extra plots when farmHeight is expanded', async () => {
+        const player = makePlayer({ money: 9999, farmHeight: 4 }); // 3x4 = 12 plots
+        const result = await plantAll(player, 'Carrot', cropList);
+        expect(result.ok).toBe(true);
+        const planted = player.farm.filter(f => f.name === 'Carrot').length;
+        expect(planted).toBe(12);
+    });
+
+    test('returns full error correctly when all extra plots are occupied', async () => {
+        const player = makePlayer({ money: 9999, farmHeight: 4 }); // 12 plots
+        player.farm.forEach(slot => { slot.name = 'Carrot'; });
+        const result = await plantAll(player, 'Carrot', cropList);
+        expect(result.ok).toBe(false);
+        expect(result.message).toMatch(/full/i);
+    });
+
+    test('plants only in empty extra plots, skips occupied base plots', async () => {
+        const player = makePlayer({ money: 9999, farmHeight: 4 }); // 3x4 = 12 plots
+        // Fill base 3x3 (indices 0-8)
+        for (let i = 0; i < 9; i++) player.farm[i] = { name: 'Mushroom', timer: new Date() };
+        const result = await plantAll(player, 'Carrot', cropList);
+        expect(result.ok).toBe(true);
+        const carrots = player.farm.filter(f => f.name === 'Carrot').length;
+        expect(carrots).toBe(3); // only the 3 extra plots
+        const mushrooms = player.farm.filter(f => f.name === 'Mushroom').length;
+        expect(mushrooms).toBe(9); // base plots untouched
+    });
 });
 
 // ─── harvest ──────────────────────────────────────────────────────────────────

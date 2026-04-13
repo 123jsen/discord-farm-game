@@ -20,6 +20,8 @@ function makePlayer(overrides = {}) {
         woodCapacity: 0,
         stoneCapacity: 0,
         metalCapacity: 0,
+        achievements: [],
+        totalCropsHarvested: 0,
         save: jest.fn().mockResolvedValue(true),
         ...overrides
     };
