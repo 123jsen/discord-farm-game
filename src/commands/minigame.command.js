@@ -83,14 +83,13 @@ module.exports = {
 
             const embed = buildEmbed(game, 'won');
             embed.addFields({ name: '💰 Reward', value: `+$${reward.toLocaleString()}` });
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.reply({ embeds: [embed] });
         }
 
         if (lost) {
             minigameService.endGame(interaction.user.id);
             return interaction.reply({
                 embeds: [buildEmbed(game, 'lost')],
-                ephemeral: true,
             });
         }
 
