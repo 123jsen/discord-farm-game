@@ -2,6 +2,7 @@
 
 const { resolveRaceSuccess } = require('./prestige.service.js');
 const { tryUnlock, formatUnlocked } = require('./achievement.service.js');
+const { PRESTIGE_MULTIPLIER } = require('../constants.js');
 
 /**
  * Plant a crop at a specific position.
@@ -89,7 +90,7 @@ async function harvest(player, cropList, server = null) {
     let harvestGain = 0;
     let cropCount = 0;
     let harvestedMutant = false;
-    const multiplier = Math.pow(1.15, player.prestigeCount || 0);
+    const multiplier = Math.pow(PRESTIGE_MULTIPLIER, player.prestigeCount || 0);
 
     for (let index = 0; index < player.farmArea; index++) {
         if (player.farm[index].name === 'Empty') continue;

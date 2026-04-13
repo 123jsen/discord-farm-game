@@ -1,5 +1,13 @@
 const { EmbedBuilder, SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { version } = require('../../package.json');
+const {
+    PRESTIGE_MULTIPLIER,
+    PRESTIGE_INITIATION_COST,
+    PRESTIGE_REFUND_PERCENT,
+    PRESTIGE_CROP_BASE,
+    RACE_DURATION_MS,
+    BUILDING_SYNERGY,
+} = require('../constants.js');
 
 function buildPages(version) {
     return [
@@ -46,7 +54,7 @@ function buildPages(version) {
                 },
                 {
                     name: '🪵 Specialize vs Diversify Buildings',
-                    value: 'Each building type has a **synergy bonus** when you own multiples:\n• 1× = no bonus\n• 2× = 1.4× production\n• 3× = 2× production\n• 4× = 2.3× production\n\nSpecializing in one resource type gives huge output. But if you need a variety of resources for upgrades, diversifying may be necessary.'
+                    value: `Each building type has a **synergy bonus** when you own multiples:\n• 1× = no bonus\n• 2× = ${BUILDING_SYNERGY[2]}× production\n• 3× = ${BUILDING_SYNERGY[3]}× production\n• 4× = ${BUILDING_SYNERGY[4]}× production\n\nSpecializing in one resource type gives huge output. But if you need a variety of resources for upgrades, diversifying may be necessary.`
                 },
                 {
                     name: '🏗️ Expand Farm vs Buy Buildings',
@@ -58,7 +66,7 @@ function buildPages(version) {
                 },
                 {
                     name: '💎 Prestige Timing',
-                    value: 'Prestiging resets your farm but grants a permanent **×1.15 income multiplier** per prestige level. The race target doubles every prestige, so it gets harder. **Prestige early for quick gains, or grind longer for a more powerful reset.**'
+                    value: `Prestiging resets your farm but grants a permanent **×${PRESTIGE_MULTIPLIER} income multiplier** per prestige level. The race target doubles every prestige, so it gets harder. **Prestige early for quick gains, or grind longer for a more powerful reset.**`
                 }
             )
             .setFooter({ text: 'Page 2/4 — Tradeoffs' }),
@@ -104,15 +112,15 @@ function buildPages(version) {
             .addFields(
                 {
                     name: '✨ What Prestige Does',
-                    value: '• Resets your money, farm, buildings, and resources back to the start\n• Grants your account a permanent **×1.15 income multiplier** (stacks multiplicatively)\n• **Does NOT reset** your achievements or total crops harvested\n\nExample: After 3 prestiges your crops are worth ×1.15³ = **×1.52** their base value.'
+                    value: `• Resets your money, farm, buildings, and resources back to the start\n• Grants your account a permanent **×${PRESTIGE_MULTIPLIER} income multiplier** (stacks multiplicatively)\n• **Does NOT reset** your achievements or total crops harvested\n\nExample: After 3 prestiges your crops are worth ×${PRESTIGE_MULTIPLIER}³ = **×${Math.pow(PRESTIGE_MULTIPLIER, 3).toFixed(2)}** their base value.`
                 },
                 {
                     name: '🏁 How to Start a Race',
-                    value: '1. Accumulate **$500,000 + 100,000 of each resource**\n2. Use `/prestige` to spend those resources and start the race\n3. The **entire server** has **1 hour** to collectively harvest a target number of crops\n4. If the target is reached (or the timer runs out with enough crops), you **prestige successfully**\n5. If the timer runs out and the target wasn\'t reached, you fail and get **30% of the cost refunded** — with a 1-hour cooldown before anyone can try again'
+                    value: `1. Accumulate **$${PRESTIGE_INITIATION_COST[0].toLocaleString()} + ${PRESTIGE_INITIATION_COST[1].toLocaleString()} of each resource**\n2. Use \`/prestige\` to spend those resources and start the race\n3. The **entire server** has **${RACE_DURATION_MS / 60000} minutes** to collectively harvest a target number of crops\n4. If the target is reached (or the timer runs out with enough crops), you **prestige successfully**\n5. If the timer runs out and the target wasn't reached, you fail and get **${Math.round(PRESTIGE_REFUND_PERCENT * 100)}% of the cost refunded** — with a ${RACE_DURATION_MS / 60000}-minute cooldown before anyone can try again`
                 },
                 {
                     name: '📈 Race Targets (doubles each prestige)',
-                    value: '• 1st prestige: **250 crops**\n• 2nd prestige: **500 crops**\n• 3rd prestige: **1,000 crops**\n• 4th prestige: **2,000 crops**\n• (doubles every time)'
+                    value: `• 1st prestige: **${PRESTIGE_CROP_BASE} crops**\n• 2nd prestige: **${PRESTIGE_CROP_BASE * 2} crops**\n• 3rd prestige: **${PRESTIGE_CROP_BASE * 4} crops**\n• 4th prestige: **${PRESTIGE_CROP_BASE * 8} crops**\n• (doubles every time)`
                 },
                 {
                     name: '🤝 The Race is Cooperative',

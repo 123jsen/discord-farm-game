@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const buildings = require('../../data/buildings/export.js');
+const { BUILDING_SYNERGY, DEFAULT_FARM_WIDTH, DEFAULT_FARM_HEIGHT, DEFAULT_BUILDING_SLOTS } = require('../constants.js');
 
 const Schema = mongoose.Schema;
 
@@ -23,8 +24,8 @@ const PlayerSchema = Schema({
     metalCapacity: { type: Number, default: 0},
 
     // Plot Detail
-    farmWidth: { type: Number, required: true, default: 3 },
-    farmHeight: { type: Number, required: true, default: 3 },
+    farmWidth: { type: Number, required: true, default: DEFAULT_FARM_WIDTH },
+    farmHeight: { type: Number, required: true, default: DEFAULT_FARM_HEIGHT },
     farm: [{
         name: { type: String, default: 'Empty' },
         timer: { type: Date, default: new Date }
@@ -42,7 +43,7 @@ const PlayerSchema = Schema({
 
     // Building Detail
     // Building Width is always 2
-    buildingSlots: { type: Number, required: true, default: 4 },
+    buildingSlots: { type: Number, required: true, default: DEFAULT_BUILDING_SLOTS },
     building: [{
         name: { type: String, default: 'Empty' },
         level: { type: Number, default: 0 }
@@ -67,7 +68,7 @@ PlayerSchema.static('calculateBuildingsEffect', function(document) {
     document.stoneCapacity = 0;
     document.metalCapacity = 0;
 
-    document.farmHeight = 3;
+    document.farmHeight = DEFAULT_FARM_HEIGHT;
 
     const woodFarm = buildings.find(build => build.target === 'wood');
     const stoneFarm = buildings.find(build => build.target === 'stone');
@@ -98,20 +99,20 @@ PlayerSchema.static('calculateBuildingsEffect', function(document) {
         }
     }
 
-    if (woodCount == 1) document.woodCapacity *= 1.0;
-    if (woodCount == 2) document.woodCapacity *= 1.4;
-    if (woodCount == 3) document.woodCapacity *= 2.0;
-    if (woodCount >= 4) document.woodCapacity *= 2.3;
+    if (woodCount == 1) document.woodCapacity *= BUILDING_SYNERGY[1];
+    if (woodCount == 2) document.woodCapacity *= BUILDING_SYNERGY[2];
+    if (woodCount == 3) document.woodCapacity *= BUILDING_SYNERGY[3];
+    if (woodCount >= 4) document.woodCapacity *= BUILDING_SYNERGY[4];
 
-    if (stoneCount == 1) document.stoneCapacity *= 1.0;
-    if (stoneCount == 2) document.stoneCapacity *= 1.4;
-    if (stoneCount == 3) document.stoneCapacity *= 2.0;
-    if (stoneCount >= 4) document.stoneCapacity *= 2.3;
+    if (stoneCount == 1) document.stoneCapacity *= BUILDING_SYNERGY[1];
+    if (stoneCount == 2) document.stoneCapacity *= BUILDING_SYNERGY[2];
+    if (stoneCount == 3) document.stoneCapacity *= BUILDING_SYNERGY[3];
+    if (stoneCount >= 4) document.stoneCapacity *= BUILDING_SYNERGY[4];
 
-    if (metalCount == 1) document.metalCapacity *= 1.0;
-    if (metalCount == 2) document.metalCapacity *= 1.4;
-    if (metalCount == 3) document.metalCapacity *= 2.0;
-    if (metalCount >= 4) document.metalCapacity *= 2.3;
+    if (metalCount == 1) document.metalCapacity *= BUILDING_SYNERGY[1];
+    if (metalCount == 2) document.metalCapacity *= BUILDING_SYNERGY[2];
+    if (metalCount == 3) document.metalCapacity *= BUILDING_SYNERGY[3];
+    if (metalCount >= 4) document.metalCapacity *= BUILDING_SYNERGY[4];
 });
 
 // Update lastHarvested

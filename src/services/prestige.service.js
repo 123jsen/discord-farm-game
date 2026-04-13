@@ -4,19 +4,29 @@ const { checkEnoughMoney } = require('../player.js');
 const Player = require('../models/player.model.js');
 const { DEFAULT_MONEY } = require('../../data/config.json');
 const { tryUnlock } = require('./achievement.service.js');
+const {
+    PRESTIGE_MULTIPLIER,
+    PRESTIGE_INITIATION_COST,
+    PRESTIGE_REFUND_PERCENT,
+    PRESTIGE_CROP_BASE,
+    PRESTIGE_VETERANS_THRESHOLD,
+    RACE_DURATION_MS,
+    RACE_COOLDOWN_MS,
+    DEFAULT_FARM_WIDTH,
+    DEFAULT_FARM_HEIGHT,
+    DEFAULT_BUILDING_SLOTS,
+} = require('../constants.js');
 
-const RACE_DURATION_MS    = 60 * 60 * 1000; // 1 hour
-const COOLDOWN_DURATION_MS = 60 * 60 * 1000; // 1 hour cooldown after failure
-const INITIATION_COST     = [200000, 20000, 20000, 20000]; // [money, wood, stone, metal]
-const REFUND_PERCENT      = 0.3;
-const PRESTIGE_MULTIPLIER = 1.15;
+const INITIATION_COST      = PRESTIGE_INITIATION_COST;
+const REFUND_PERCENT       = PRESTIGE_REFUND_PERCENT;
+const COOLDOWN_DURATION_MS = RACE_COOLDOWN_MS;
 
 /**
  * Returns the crops needed to prestige based on current prestige count.
  * 1st prestige: 250, 2nd: 500, 3rd: 1000, 4th: 2000 ... (doubles each time)
  */
 function getTargetCrops(prestigeCount) {
-    return 250 * Math.pow(2, prestigeCount);
+    return PRESTIGE_CROP_BASE * Math.pow(2, prestigeCount);
 }
 
 /**
@@ -70,7 +80,7 @@ async function resolveRaceSuccess(server) {
     if (initiator) {
         initiator.prestigeCount += 1;
         tryUnlock(initiator, 'The Reset');
-        if (initiator.prestigeCount >= 5) tryUnlock(initiator, 'Veteran');
+    if (initiator.prestigeCount >= PRESTIGE_VETERANS_THRESHOLD) tryUnlock(initiator, 'Veteran');
         await resetPlayer(initiator);
     }
 
@@ -158,16 +168,16 @@ function getRaceStatus(server) {
  * prestigeCount must already be incremented before calling.
  */
 async function resetPlayer(player) {
-    const emptyFarm     = Array(9).fill(null).map(() => ({ name: 'Empty', timer: new Date() }));
-    const emptyBuilding = Array(4).fill(null).map(() => ({ name: 'Empty', level: 0 }));
+    const emptyFarm     = Array(DEFAULT_FARM_WIDTH * DEFAULT_FARM_HEIGHT).fill(null).map(() => ({ name: 'Empty', timer: new Date() }));
+    const emptyBuilding = Array(DEFAULT_BUILDING_SLOTS).fill(null).map(() => ({ name: 'Empty', level: 0 }));
 
     player.money         = DEFAULT_MONEY;
     player.wood          = 0;
     player.stone         = 0;
     player.metal         = 0;
-    player.farmWidth     = 3;
-    player.farmHeight    = 3;
-    player.buildingSlots = 4;
+    player.farmWidth     = DEFAULT_FARM_WIDTH;
+    player.farmHeight    = DEFAULT_FARM_HEIGHT;
+    player.buildingSlots = DEFAULT_BUILDING_SLOTS;
     player.woodCapacity  = 0;
     player.stoneCapacity = 0;
     player.metalCapacity = 0;

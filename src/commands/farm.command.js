@@ -1,6 +1,7 @@
 const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const crops = require('../../data/crops/export.js');
 const buildings = require('../../data/buildings/export.js');
+const { PRESTIGE_MULTIPLIER } = require('../constants.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -33,7 +34,7 @@ module.exports = {
 
         const prestigeCount = player.prestigeCount || 0;
         const prestigeValue = prestigeCount > 0
-            ? `${'💎'.repeat(Math.min(prestigeCount, 5))} Level ${prestigeCount} (×${Math.pow(1.15, prestigeCount).toFixed(2)} income)`
+            ? `${'💎'.repeat(Math.min(prestigeCount, 5))} Level ${prestigeCount} (×${Math.pow(PRESTIGE_MULTIPLIER, prestigeCount).toFixed(2)} income)`
             : 'None';
 
         const farmEmbed = new EmbedBuilder()
