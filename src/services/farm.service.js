@@ -173,4 +173,56 @@ function checkCrop(player, row, col, cropList) {
     return { ok: false, message: `${player.farm[index].name} will be mature in ${Math.round(timeRemaining)} seconds` };
 }
 
-module.exports = { plant, plantAll, harvest, checkCrop };
+/**
+ * Scan all plots and return crops grouped by type with ready/pending counts.
+ * Pending crops whose timers are within 10 seconds of each other are batched together.
+ * @param {object} player   - Mongoose player document
+ * @param {Array}  cropList - from data/crops/export.js
+ * @returns {Array} sorted array of group objects
+ */
+function checkAllCrops(player, cropList) {
+    const now = Date.now();
+    const map = {};
+
+    for (let i = 0; i < player.farmArea; i++) {
+        const slot = player.farm[i];
+        if (slot.name === 'Empty') continue;
+
+        const crop = cropList.find(c => c.name === slot.name);
+        if (!map[slot.name]) map[slot.name] = { name: slot.name, image: crop.image, ready: 0, pending: [] };
+
+        const secsLeft = (slot.timer.getTime() + crop.growthTime - now) / 1000;
+        if (secsLeft <= 0) {
+            map[slot.name].ready++;
+        } else {
+            map[slot.name].pending.push(Math.ceil(secsLeft));
+        }
+    }
+
+    // Batch pending crops whose time is within 10s of each other
+    for (const group of Object.values(map)) {
+        group.pending.sort((a, b) => a - b);
+        const batches = [];
+        for (const secs of group.pending) {
+            const last = batches[batches.length - 1];
+            if (last && secs - last.secs <= 10) {
+                last.count++;
+            } else {
+                batches.push({ count: 1, secs });
+            }
+        }
+        group.batches = batches;
+        delete group.pending;
+    }
+
+    // Sort groups: types with ready crops first, then by earliest pending time
+    return Object.values(map).sort((a, b) => {
+        if (a.ready && !b.ready) return -1;
+        if (!a.ready && b.ready) return 1;
+        const aMin = a.batches[0]?.secs ?? Infinity;
+        const bMin = b.batches[0]?.secs ?? Infinity;
+        return aMin - bMin;
+    });
+}
+
+module.exports = { plant, plantAll, harvest, checkCrop, checkAllCrops };
