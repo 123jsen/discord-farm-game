@@ -19,6 +19,13 @@ const DEFAULT_BUILDING_SLOTS = 4;
 // ── Building synergy multipliers (keyed by building count) ───────────────────
 const BUILDING_SYNERGY = { 1: 1.0, 2: 1.4, 3: 2.0, 4: 2.3 };
 
+// ── Minigame (Code Breaker) ───────────────────────────────────────────────────
+const MINIGAME_MIN_REWARD     = 50;
+const MINIGAME_MAX_BASE       = 500;                // cap before prestige scaling
+const MINIGAME_PRESTIGE_SCALE = 1.15;               // cap multiplier per prestige level
+// reward multiplier indexed by guesses used (index 0 = solved in 1 guess)
+const MINIGAME_MULTIPLIERS    = [3.0, 2.5, 2.0, 1.5, 1.25, 1.0];
+
 module.exports = {
     PRESTIGE_MULTIPLIER,
     PRESTIGE_INITIATION_COST,
@@ -31,4 +38,8 @@ module.exports = {
     DEFAULT_FARM_HEIGHT,
     DEFAULT_BUILDING_SLOTS,
     BUILDING_SYNERGY,
+    MINIGAME_MIN_REWARD,
+    MINIGAME_MAX_BASE,
+    MINIGAME_PRESTIGE_SCALE,
+    MINIGAME_MULTIPLIERS,
 };

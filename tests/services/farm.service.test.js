@@ -1,4 +1,4 @@
-const { plant, plantAll, harvest, checkCrop } = require('../../src/services/farm.service.js');
+const { plant, plantAll, harvest, checkCrop, checkAllCrops } = require('../../src/services/farm.service.js');
 const { makePlayer, cropList } = require('../helpers.js');
 
 // ─── plant ────────────────────────────────────────────────────────────────────
@@ -305,5 +305,95 @@ describe('checkCrop', () => {
         const result = checkCrop(player, 0, 0, cropList);
         expect(result.message).toMatch(/seconds/i);
         expect(result.message).not.toMatch(/minutes/i);
+    });
+});
+
+// ─── checkAllCrops ────────────────────────────────────────────────────────────
+
+describe('checkAllCrops', () => {
+    test('returns empty array when farm is empty', () => {
+        const player = makePlayer();
+        const result = checkAllCrops(player, cropList);
+        expect(result).toEqual([]);
+    });
+
+    test('shows a ready crop correctly', () => {
+        const player = makePlayer();
+        player.farm[0] = { name: 'Carrot', timer: new Date(Date.now() - 99999) };
+        const result = checkAllCrops(player, cropList);
+        expect(result).toHaveLength(1);
+        expect(result[0].name).toBe('Carrot');
+        expect(result[0].ready).toBe(1);
+        expect(result[0].batches).toEqual([]);
+    });
+
+    test('shows a pending crop with correct time bucket', () => {
+        const player = makePlayer();
+        player.farm[0] = { name: 'Carrot', timer: new Date(Date.now() - 1000) };
+        const result = checkAllCrops(player, cropList);
+        expect(result).toHaveLength(1);
+        expect(result[0].ready).toBe(0);
+        expect(result[0].batches).toHaveLength(1);
+        expect(result[0].batches[0].count).toBe(1);
+        expect(result[0].batches[0].secs).toBeGreaterThan(0);
+        expect(result[0].batches[0].secs).toBeLessThanOrEqual(40);
+    });
+
+    test('batches crops of the same type planted at the same time', () => {
+        const player = makePlayer();
+        const timer = new Date(Date.now() - 1000);
+        player.farm[0] = { name: 'Carrot', timer };
+        player.farm[1] = { name: 'Carrot', timer };
+        player.farm[2] = { name: 'Carrot', timer };
+        const result = checkAllCrops(player, cropList);
+        expect(result).toHaveLength(1);
+        expect(result[0].batches).toHaveLength(1);
+        expect(result[0].batches[0].count).toBe(3);
+    });
+
+    test('splits into two batches when times differ by more than 10s', () => {
+        const player = makePlayer();
+        player.farm[0] = { name: 'Carrot', timer: new Date(Date.now() - 1000) };  // ~39s left
+        player.farm[1] = { name: 'Carrot', timer: new Date(Date.now() - 25000) }; // ~15s left
+        const result = checkAllCrops(player, cropList);
+        expect(result[0].batches).toHaveLength(2);
+    });
+
+    test('groups separate crop types into separate entries', () => {
+        const player = makePlayer();
+        const pastDate = new Date(Date.now() - 99999);
+        player.farm[0] = { name: 'Carrot', timer: pastDate };
+        player.farm[1] = { name: 'Mushroom', timer: new Date(Date.now() - 1000) };
+        const result = checkAllCrops(player, cropList);
+        expect(result).toHaveLength(2);
+        const names = result.map(g => g.name);
+        expect(names).toContain('Carrot');
+        expect(names).toContain('Mushroom');
+    });
+
+    test('sorts groups with ready crops first', () => {
+        const player = makePlayer();
+        player.farm[0] = { name: 'Mushroom', timer: new Date(Date.now() - 1000) };
+        player.farm[1] = { name: 'Carrot',   timer: new Date(Date.now() - 99999) };
+        const result = checkAllCrops(player, cropList);
+        expect(result[0].name).toBe('Carrot');
+        expect(result[1].name).toBe('Mushroom');
+    });
+
+    test('mixes ready and pending correctly within the same crop type', () => {
+        const player = makePlayer();
+        player.farm[0] = { name: 'Carrot', timer: new Date(Date.now() - 99999) };
+        player.farm[1] = { name: 'Carrot', timer: new Date(Date.now() - 1000) };
+        const result = checkAllCrops(player, cropList);
+        expect(result).toHaveLength(1);
+        expect(result[0].ready).toBe(1);
+        expect(result[0].batches).toHaveLength(1);
+    });
+
+    test('ignores empty slots', () => {
+        const player = makePlayer();
+        player.farm[0] = { name: 'Carrot', timer: new Date(Date.now() - 99999) };
+        const result = checkAllCrops(player, cropList);
+        expect(result).toHaveLength(1);
     });
 });
