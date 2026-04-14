@@ -1,3 +1,7 @@
+# Deployment scripts and secrets — contain infra details / real credentials
+deploy.sh
+k8s/secret.yaml
+
 # Logs
 logs
 *.log
