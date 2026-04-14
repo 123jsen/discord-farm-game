@@ -159,4 +159,36 @@ function checkBuild(player, row, col) {
     return { ok: false, message: `Level ${current.level} ${current.name} is built here` };
 }
 
-module.exports = { build, destroy, checkBuild };
+/**
+ * Return all building slots grouped by building type, with level info.
+ * @param {object} player        - Mongoose player document
+ * @param {Array}  buildingsList - from data/buildings/export.js
+ * @returns {Array} groups - [{ name, image, maxLevel, slots: [{ row, col, level, effect }] }]
+ */
+function checkAllBuildings(player, buildingsList) {
+    const map = {};
+
+    for (let i = 0; i < player.buildingSlots; i++) {
+        const slot = player.building[i];
+        if (slot.name === 'Empty') continue;
+
+        const category = buildingsList.find(b => b.name === slot.name);
+        if (!map[slot.name]) {
+            map[slot.name] = {
+                name: slot.name,
+                image: category.image,
+                maxLevel: category.levels.length,
+                slots: [],
+            };
+        }
+
+        const row = Math.floor(i / player.buildingWidth) + 1;
+        const col = (i % player.buildingWidth) + 1;
+        const effect = category.levels[slot.level - 1]?.effect ?? null;
+        map[slot.name].slots.push({ row, col, level: slot.level, effect });
+    }
+
+    return Object.values(map);
+}
+
+module.exports = { build, destroy, checkBuild, checkAllBuildings };
